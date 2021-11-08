@@ -1,0 +1,11 @@
+from logs import Logger
+logger = Logger()
+
+class ExceptionHandler(Exception):
+
+    def __init__(self, m):
+        self.message = m
+        
+    def __str__(self):
+
+        return self.message
