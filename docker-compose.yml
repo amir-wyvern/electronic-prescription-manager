@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    networks:
+    - deployml_network
+
+
+  api:
+    image: api
+    build: .
+
+    ports:
+    - "80:80"
+    
+    networks:
+    - deployml_network
+    
+    depends_on:
+    - redis
+    
+    environment:
+    - CLIENT_SLEEP=0.25  # Time in ms between each poll by web server against Redis
+    - CLIENT_MAX_TRIES=100  # Num tries by web server to retrieve results from Redis before giving up
+
+
+networks:
+    deployml_network:
