@@ -2,7 +2,7 @@ version: '3'
 
 services:
   redis:
-    image: redis
+    image: redis:6.2.5
     networks:
     - deployml_network
 

@@ -25,7 +25,7 @@ services:
       - traefik
 
   redis:
-    image: redis
+    image: redis:6.2.5
     networks:
       - traefik
 
