@@ -6,9 +6,9 @@ services:
     build: .
     image: $STACK:latest
     environment:
-    - CLIENT_SLEEP: "0.25"  # Time in ms between each poll by web server against Redis
-    - CLIENT_MAX_TRIES: "100"  # Num tries by web server to retrieve results from Redis before giving up
-    - REDISURI: $REDISURI
+      CLIENT_SLEEP: 0.25  # Time in ms between each poll by web server against Redis
+      CLIENT_MAX_TRIES: 100  # Num tries by web server to retrieve results from Redis before giving up
+      REDISURI: $REDISURI
     deploy:
       labels:
         - "traefik.enable=true"
