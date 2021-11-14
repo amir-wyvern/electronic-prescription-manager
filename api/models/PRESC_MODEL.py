@@ -14,7 +14,8 @@ from async_redis import (
 
 class TaminPresc(Model):
 
-        patient	         : str = PkFieldHash()                    # patient national code
+        prescId          : str = PkFieldHash() 
+        patient	         : str = StringFieldHash(indexable= True) # patient national code
         mobile           : str = StringFieldHash(indexable= True) # patient mobile number
         prescTypeId      : str = StringFieldHash()                # prescription type find proper one from Prescription Type
         prescDate        : str = StringFieldHash()                # prescription date
@@ -57,101 +58,3 @@ class SalamatPresc(Model):
         numberOfPeriod         : str = StringFieldHash()                # 
         description            : str = StringFieldHash()                # 
         checkCode	       : str = StringFieldHash()                # Check the rules and services of the drug (‫‪checkSubscription‬‬)
-
-
-
-
-
-
-# class PrescAsVisitTamin(Model):
-
-#         patient	         : str = PkFieldHash()                    # patient national code
-#         mobile           : str = StringFieldHash(indexable= True) # patient mobile number
-#         prescTypeId      : str = StringFieldHash()                # prescription type find proper one from Prescription Type
-#         prescDate        : str = StringFieldHash()                # prescription date
-#         docId            : str = StringFieldHash()                # doctor valid id
-#         docMobileNo      : str = StringFieldHash(indexable= True) # doctor mobile number
-#         docNationalCode  : str = StringFieldHash(indexable= True) # doctor national code
-#         comments         : str = StringFieldHash()                # comment
-#         creatorType      : str = StringFieldHash()
-#         siamId           : str = StringFieldHash(indexable= True)
-         
-#         noteDetailEprscs : str = StringFieldHash() 
-
-
-# class PrescAsServiceTamin(Model):
-
-#         patient          : str = StringFieldHash()                # expire date
-#         mobile	         : str = StringFieldHash()                # defines quantity of service
-#         prescTypeId      : str = StringFieldHash()                # defines repeat interval
-#         prescDate        : str = StringFieldHash() 
-#         docId	         : str = StringFieldHash(indexable= True) # valid SIAM id
-#         docMobileNo      : str = StringFieldHash(indexable= True) 
-#         docNationalCode	 : str = StringFieldHash()                # defines that current request is for dentist service
-#         comments	 : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         noteDetailEprscs : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         srvType	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvCode	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvQty	         : str = StringFieldHash()                # defines that current request is for dentist service
-
-
-# class PrescAsServiceAndVisitTamin(Model):
-
-#         patient          : str = StringFieldHash()                # expire date
-#         mobile	         : str = StringFieldHash()                # defines quantity of service
-#         prescTypeId      : str = StringFieldHash()                # defines repeat interval
-#         prescDate        : str = StringFieldHash() 
-#         docId	         : str = StringFieldHash(indexable= True) # valid SIAM id
-#         docMobileNo      : str = StringFieldHash(indexable= True) 
-#         docNationalCode	 : str = StringFieldHash()                # defines that current request is for dentist service
-#         comments	 : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         noteDetailEprscs : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         srvType	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvCode	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvQty	         : str = StringFieldHash()                # defines that current request is for dentist service
-
-
-# class PrescAsDrugTamin(Model):
-
-#         patient          : str = StringFieldHash()                # expire date
-#         mobile	         : str = StringFieldHash()                # defines quantity of service
-#         prescTypeId      : str = StringFieldHash()                # defines repeat interval
-#         prescDate        : str = StringFieldHash() 
-#         docId	         : str = StringFieldHash(indexable= True) # valid SIAM id
-#         docMobileNo      : str = StringFieldHash(indexable= True) 
-#         docNationalCode	 : str = StringFieldHash()                # defines that current request is for dentist service
-#         comments	 : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         noteDetailEprscs : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         srvType	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvCode	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvQty	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         drugAmntId	 : str = StringFieldHash()                # defines that current request is for dentist service
-#         repeat	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         drugInstId	 : str = StringFieldHash()                # defines that current request is for dentist service
-
-
-# class PrescAsParaclinicTamin(Model):
-
-#         patient          : str = StringFieldHash()                # expire date
-#         mobile	         : str = StringFieldHash()                # defines quantity of service
-#         prescTypeId      : str = StringFieldHash()                # defines repeat interval
-#         prescDate        : str = StringFieldHash() 
-#         docId	         : str = StringFieldHash(indexable= True) # valid SIAM id
-#         docMobileNo      : str = StringFieldHash(indexable= True) 
-#         docNationalCode	 : str = StringFieldHash()                # defines that current request is for dentist service
-#         comments	 : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         noteDetailEprscs : str = StringFieldHash()                # defines that current request is for dentist service
-        
-#         srvType	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvCode	         : str = StringFieldHash()                # defines that current request is for dentist service
-#         parGrpCode	 : str = StringFieldHash()                # defines that current request is for dentist service
-#         srvQty	         : str = StringFieldHash()                # defines that current request is for dentist service
-
-
