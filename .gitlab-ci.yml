@@ -1,0 +1,20 @@
+image: docker
+
+services:
+  - docker:dind
+
+build:
+  stage: build
+  only:
+    - master
+  script:
+    - docker-compose -f docker-compose-prod.yml build --force-rm
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  script:
+    - docker stack deploy -c docker-compose-prod.yml $STACK
+    - docker service update --force "$STACK"_"$SERVICE1"
+
