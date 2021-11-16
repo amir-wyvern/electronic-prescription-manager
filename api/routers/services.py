@@ -14,17 +14,20 @@ router = APIRouter(
 
 class drugQueryModel(BaseModel):
 
-    match     : str = Field(... ,max_length=150 )
+    apiKey : str = Field(... ,max_length=150 )
+    match  : str = Field(... ,max_length=150 )
 
 
 class drugAmntQueryModel(BaseModel):
 
-    match     : str = Field(... ,max_length=150 )
+    apiKey : str = Field(... ,max_length=150 )
+    match  : str = Field(... ,max_length=150 )
 
 
 class drugInstrQueryModel(BaseModel):
 
-    match     : str = Field(... ,max_length=150 )
+    apiKey : str = Field(... ,max_length=150 )
+    match  : str = Field(... ,max_length=150 )
 
 
 class ServiceType(BaseModel):
@@ -65,7 +68,7 @@ class DrugQuery_ResponseModel(BaseModel):
 
 class DrugAmntQuery_ResponseModel(BaseModel):
 
-    drugAmntId      : int = Field(... ,example=  14)
+    drugAmntId      : int = Field(... ,example= 14)
     drugAmntCode    : str = Field(... ,example= '14')
     drugAmntSumry   : str
     drugAmntLatin   : str
@@ -88,7 +91,7 @@ class Examples:
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
-                        'doctor_id':'98789' ,
+                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                         'match' : 'Ada'
                     }
                 } ,
@@ -97,7 +100,7 @@ class Examples:
                     'summary': 'get all the items',
                     'description': 'If the value is empty, All values will be returned',
                     'value':{
-                        'doctor_id' : '98789' ,
+                        'apiKey' : '640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                         'match':''
                     }
                 }
@@ -108,7 +111,7 @@ class Examples:
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
-                        'doctor_id':'98789' ,
+                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                         'match' : 'قاشق غذاخوري'
                     }
                 } ,
@@ -117,7 +120,7 @@ class Examples:
                     'summary': 'get all the items',
                     'description': 'If the value is empty, All values will be returned',
                     'value':{
-                        'doctor_id' : '98789' ,
+                        'apiKey' : '640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                         'match':''
                     }
                 }
@@ -128,7 +131,7 @@ class Examples:
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
-                        'doctor_id':'98789' ,
+                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                         'match' : 'صبح'
                     }
                 } ,
@@ -137,7 +140,7 @@ class Examples:
                     'summary': 'get all the items',
                     'description': 'If the value is empty, All values will be returned',
                     'value':{
-                        'doctor_id' : '98789' ,
+                        'apiKey' : '640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                         'match':''
                     }
                 }
@@ -149,11 +152,12 @@ class Examples:
                     'description': '',
                     'value':{
 
-                        'doctor_id':'98789' ,
+                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
                     }
                 } ,
 
     }    
+
 
 @router.get("/drugs" ,response_model= List[DrugQuery_ResponseModel]) 
 async def drug_query(match: drugQueryModel= Body(... ,examples= Examples.drug_query)):
@@ -167,6 +171,7 @@ async def drug_amnt_query(match: drugAmntQueryModel= Body(... ,examples= Example
     
     ls_match = await redis._zscan('GlobalDrugAmnt' , match)
     return ls_match
+
 
 @router.get("/drug-instr" ,response_model= List[DrugInstrQuery_ResponseModel]) 
 async def drug_instr_query(match: drugInstrQueryModel= Body(... ,examples= Examples.drug_instr_query)):
