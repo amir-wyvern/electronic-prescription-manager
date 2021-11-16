@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  app:
+    build: .
+    image: $STACK:latest
+    environment:
+      CLIENT_SLEEP: 0.25  # Time in ms between each poll by web server against Redis
+      CLIENT_MAX_TRIES: 100  # Num tries by web server to retrieve results from Redis before giving up
+      REDISURI: $REDISURI
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.routers.$STACK.rule=Host(`$URL`)"
+        - "traefik.http.routers.$STACK.entrypoints=websecure"
+        - "traefik.http.routers.$STACK.tls=true"
+        - "traefik.http.routers.$STACK.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.$STACK.service=$STACK"
+        - "traefik.http.services.$STACK.loadbalancer.server.port=80"
+      mode: replicated
+      replicas: 1
+    networks:
+      - traefik
+
+  redis:
+    image: redis:6.2.5
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
