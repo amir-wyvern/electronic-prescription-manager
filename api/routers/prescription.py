@@ -1,7 +1,7 @@
 from fastapi import APIRouter ,Body
-from pydantic import BaseModel ,Field
+from pydantic import BaseModel ,Field 
+from typing import List, Optional
 
-from routers import patient
 
 router = APIRouter(
     prefix="/presc",
@@ -10,51 +10,64 @@ router = APIRouter(
 
 class DrugsModel(BaseModel):
 
-    drugName : str 
+    code     : str 
+    drugAmnt : str
+    drugQty  : str
+    number   : str
 
 
-class SendPrescriptionModel(BaseModel):
+class ExperimentationModel(BaseModel):
     
-    patientId : str = Field(...)
-    doctorId  : str = Field(...)
-    drugId    : list = Field(...)
+    code   : str
+    number : str
 
-@router.post("/asdrug") 
-async def send_prescription(item: SendPrescriptionModel= Body(...)):
 
+class ImageingModel(BaseModel):
+    code   : str
+    number : str
+
+
+class ServicesModel(BaseModel):
+
+    code   : str
+    number : str
+
+
+class PhysiotherapyModel(BaseModel):
+
+    id     : str
+    number : str
+
+
+class ReferenceModel(BaseModel):
+    id     : str
+    number : str
+
+
+class PrescriptionModel(BaseModel):
+    
+    experimentation : List[ExperimentationModel]
+    physiotherapy   : List[PhysiotherapyModel]
+    imaging         : List[ImageingModel]
+    drugs           : List[DrugsModel]
+    services        : List[ServicesModel]
+    reference       : List[ReferenceModel]
+
+
+class PrescriptionRequestModel(BaseModel):
+    
+    patientId     : str  = Field(...)
+    doctorId      : str  = Field(...)
+    prescription  : PrescriptionModel
+
+
+class PrescriptionResponseModel(BaseModel):
+    
+    prescId : str
+
+
+
+@router.post("/" ,response_model= PrescriptionResponseModel) 
+async def save_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
-
-# {
-# "id":int,
-# "serviceId":int,
-# "consumption":String,
-# "shape":String,
-# "consumptionInstruction":String,
-# "numberOfRequest":int,
-# "numberOfPeriod":int,
-# "description":String,
-# "checkCode":String
-# }
-
-#     "noteDetailEprscs": [
-#         {
-#             "srvId": {
-#                 "srvType": {
-#                     "srvType": "01"
-#                 },
-#                 "srvCode": "00694"
-#             },
-#             "srvQty": 1,
-#             "timesAday": {
-#                 "drugAmntId": 1
-#             },
-#             "repeat": null,
-#             "drugInstruction": {
-#                 "drugInstId": 5
-#             }
-#         }
-#     ]
-
-
-# "nationalNumber"

@@ -1,5 +1,7 @@
 from fastapi import Depends, FastAPI
 
+from api.routers import prescription
+
 # from .dependencies import get_query_token, get_token_header
 
 from .routers import patient
@@ -17,6 +19,7 @@ api.include_router(patient.router)
 api.include_router(login.router)
 api.include_router(services.router)
 api.include_router(doctor.router)
+api.include_router(prescription.router)
 
 
 @api.on_event("startup")
