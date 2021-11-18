@@ -62,6 +62,7 @@ class PatientInfo(BaseModel):
     subInsurance : str = Field(... ,example= 'روستاییان')
     exDate       : str = Field(... ,example= '1786299942')
 
+
 class ErrorModel(BaseModel):
 
     detail : str = Field(... ,example= 'Username or password is incorrect!' )
