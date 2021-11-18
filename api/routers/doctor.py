@@ -55,6 +55,7 @@ class ItemCheckDrug(BaseModel):
 
     drugId : str = Field(... ,example= '897986')
 
+
 class RespCheckDrug(BaseModel):
     
     drugId   : str = Field(... ,example= '897986')
@@ -68,6 +69,7 @@ class CheckDrugModel(BaseModel):
     doctorId    : str = Field(... ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')
     patientId   : str = Field(... ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
     drugs       : List[ItemCheckDrug] 
+
 
 class CheckDrug_ResponseModel(BaseModel):
 
@@ -128,7 +130,7 @@ class Examples:
 
     check_drugs ={
                 'normal': {
-                    'summary': 'without error or warning',
+                    'summary': 'without error and warning',
                     'description': 'everything is ok',
                     'value':{
                         'exception' : False,
@@ -250,19 +252,17 @@ async def drug_query(match: drugQueryModel= Body(... ,examples= Examples.drug_qu
     ls_match = await redis._zscan('GlobalDrug' , match)
     return ls_match
 
-@router.get("/drugamnt" ,response_model= List[DrugAmntQuery_ResponseModel]) 
+@router.get("/drug-amnt" ,response_model= List[DrugAmntQuery_ResponseModel]) 
 async def drug_amnt_query(match: drugAmntQueryModel= Body(... ,examples= Examples.drug_amnt_query )):
     
     ls_match = await redis._zscan('GlobalDrugAmnt' , match)
     return ls_match
 
-@router.get("/druginst" ,response_model= List[DrugInstrQuery_ResponseModel]) 
+@router.get("/drug-inst" ,response_model= List[DrugInstrQuery_ResponseModel]) 
 async def drug_instr_query(match: drugInstrQueryModel= Body(... ,examples= Examples.drug_instr_query)):
 
     ls_match = await redis._zscan('GlobalDrugInstr' , match)
     return ls_match 
-
-
 
 
 @router.get("/drug/check" ,response_model= CheckDrug_ResponseModel)  
