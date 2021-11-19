@@ -13,7 +13,28 @@ from .async_redis import redis
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
-api = FastAPI()
+description = """
+### Electronic Prescription Manager
+*epm is a interface api that allows the registration and management of electronic prescriptions
+It also has other facilities such as better clinic management and patient medical records*
+
+### Features
+- *Register ,Edit & Remove electronic prescription*
+- *Clinic management*
+- ✨ *Patient medical record*✨
+
+> *This version is still under development* 
+> *and some of its features may not work*
+ 
+  """
+
+api = FastAPI( 
+        title="EPM Backend",
+        description=description,
+        version="0.0.1",
+        docs_url = '/docs',  # swagger UI
+        redoc_url ='/'     # Redoc UI
+)
 
 api.include_router(patient.router)
 api.include_router(login.router)
