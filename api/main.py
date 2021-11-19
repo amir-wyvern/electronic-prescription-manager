@@ -13,12 +13,13 @@ from .async_redis import redis
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
+
 description = """
-### Electronic Prescription Manager
+### *Electronic Prescription Manager*
 *epm is a interface api that allows the registration and management of electronic prescriptions
 It also has other facilities such as better clinic management and patient medical records*
 
-### Features
+### *Features*
 - *Register ,Edit & Remove electronic prescription*
 - *Clinic management*
 - ✨ *Patient medical record*✨
