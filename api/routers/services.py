@@ -39,6 +39,7 @@ class ExperimentationModel(BaseModel):
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
     doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
     phrase     : str = Field(... ,max_length=150 )    
+    
 class PhysiotherapyModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
@@ -94,7 +95,7 @@ class ServiceQuery_ResponseModel(BaseModel):
 class ExperimentationQuery_ResponseModel(BaseModel):
 
     id  : str = Field(... ,example= '183957')
-    name    : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
+    name    : str = Field(... )
     favorit : bool 
 
 
@@ -131,6 +132,7 @@ class DrugInstrQuery_ResponseModel(BaseModel):
 
 
 class Examples:
+
 
     check_drugs ={
                 'normal': {
@@ -272,25 +274,25 @@ async def drug_instr_query(phrase: drugInstrQueryModel= Body(...)):
 
 
 @router.get("/experimentation" ,response_model= List[ExperimentationQuery_ResponseModel]) 
-async def drug_query(phrase: ExperimentationModel= Body(... )):
+async def experimentation_query(phrase: ExperimentationModel= Body(... )):
     
     ls_phrase = await redis._zscan('GlobalDrug' , phrase)
     return ls_phrase
 
 @router.get("/physiotherapy" ,response_model= List[PhysiotherapyQuery_ResponseModel]) 
-async def drug_query(phrase: PhysiotherapyModel= Body(... )):
+async def physiotherapy_query(phrase: PhysiotherapyModel= Body(... )):
     
     ls_phrase = await redis._zscan('GlobalDrug' , phrase)
     return ls_phrase
 
 @router.get("/imaging" ,response_model= List[ImagingQuery_ResponseModel]) 
-async def drug_query(phrase: ImagingModel= Body(... )):
+async def imaging_query(phrase: ImagingModel= Body(... )):
     
     ls_phrase = await redis._zscan('GlobalDrug' , phrase)
     return ls_phrase
 
 @router.get("/service" ,response_model= List[ServiceQuery_ResponseModel]) 
-async def drug_query(phrase: ServiceModel= Body(... )):
+async def service_query(phrase: ServiceModel= Body(... )):
     
     ls_phrase = await redis._zscan('GlobalDrug' , phrase)
     return ls_phrase
