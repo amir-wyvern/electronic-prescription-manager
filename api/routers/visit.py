@@ -9,21 +9,19 @@ router = APIRouter(
     )
 
 class VisitModel(BaseModel):
+
     national_number : str = Field(... ,max_length= 10 ,min_length= 10)
-    numberphone : str = Field(... ,max_length= 11 ,min_length= 11) 
+    numberphone     : str = Field(... ,max_length= 11 ,min_length= 11) 
+
 
 class VisitResponse(BaseModel):
-    pass
+    
+    prescCode : str 
 
-@router.post("/register") #,response_model=)
+
+@router.post("/" ,response_model= VisitResponse)
 async def visitRegister(item :VisitModel = Body(...)):
     return item
-
-
-@router.get("/history") #,response_model=)
-async def fetchVisitHistory(item :VisitModel = Body(...)):
-    return item
-
 
 
 
