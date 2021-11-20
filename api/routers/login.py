@@ -11,7 +11,7 @@ from ..insuranceAPI import Doctor
 
 router = APIRouter(
     prefix='/login',
-    tags=["login"]
+    tags=["Login"]
     )
 
 class Examples:
