@@ -1,33 +1,61 @@
 from typing import Dict, List
 from fastapi import APIRouter ,Body
 from pydantic import BaseModel ,Field
-from pydantic.errors import BytesError
+
 from ..async_redis.redis_obj import redis
 
 from ..logs import Logger
 logger = Logger()
 
 router = APIRouter(
-    prefix="/services",
-    tags=["services"]
+    prefix="/srvc",
+    tags=["Services"]
     )
+
 
 class drugQueryModel(BaseModel):
 
-    apiKey : str = Field(... ,max_length=150 )
-    match  : str = Field(... ,max_length=150 )
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )
 
 
 class drugAmntQueryModel(BaseModel):
 
-    apiKey : str = Field(... ,max_length=150 )
-    match  : str = Field(... ,max_length=150 )
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )
 
 
 class drugInstrQueryModel(BaseModel):
 
-    apiKey : str = Field(... ,max_length=150 )
-    match  : str = Field(... ,max_length=150 )
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )
+
+
+class ExperimentationModel(BaseModel):
+
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )    
+class PhysiotherapyModel(BaseModel):
+
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )    
+class ImagingModel(BaseModel):
+
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )    
+
+
+class ServiceModel(BaseModel):
+
+    patientId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
+    phrase     : str = Field(... ,max_length=150 )    
 
 
 class ServiceType(BaseModel):
@@ -41,58 +69,126 @@ class ServiceType(BaseModel):
 
 class DrugQuery_ResponseModel(BaseModel):
 
-    agreementFlag     : str
-    bGType            : str = Field(... ,example= '1')
-    dentalServiceType : str
-    doseCode          : str
-    gSrvCode          : str
-    hosprescType      : str
-    srvName           : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
-    srvName2          : str
-    srvPrice          : int = Field(... ,example= 0)
-    srvPriceDate      : str = Field(... ,example= '13980216')
-    isDeleted         : str
-    parTarefGrp       : str
-    srvBimSw          : str = Field(... ,example= '2')
-    srvCode           : str = Field(... ,example= '52198')
-    srvCodeComplete   : str = Field(... ,example= '0000052198')
-    srvId             : int = Field(... ,example= 183957)
-    srv_id            : str 
-    status            : str = Field(... ,example= '2')
-    statusstDate      : str = Field(... ,example= '13980216')
-    visible           : str = Field(... ,example= '1')
-    wsSrvCode         : str = Field(... ,example= '52198')
+    id      : str = Field(... ,example= '8786522')
+    name    : str = Field(... )
+    favorit : bool 
 
-    srvType           : ServiceType
+class PhysiotherapyQuery_ResponseModel(BaseModel):
+
+    id      : str = Field(... ,example= '1332457')
+    name    : str = Field(...)
+    favorit : bool 
+class ImagingQuery_ResponseModel(BaseModel):
+
+    id      : str = Field(... ,example= '8975642')
+    name    : str = Field(...)
+    favorit : bool 
+class ServiceQuery_ResponseModel(BaseModel):
+
+    id      : str = Field(... ,example= '4568752')
+    name    : str = Field(...)
+    favorit : bool 
+
+
+
+class ExperimentationQuery_ResponseModel(BaseModel):
+
+    id  : str = Field(... ,example= '183957')
+    name    : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
+    favorit : bool 
+
+
+class ItemCheckDrug(BaseModel):
+
+    drugId : str = Field(... ,example= '897986')
+
+
+class CheckDrugModel(BaseModel):
+    
+    doctorId    : str = Field(... ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')
+    patientId   : str = Field(... ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
+    drugs       : List[ItemCheckDrug] 
+
+
+class CheckDrug_ResponseModel(BaseModel):
+
+    id            : str = Field(... ,example= '897986')
+    drugName      : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
+    exceptionType : str = Field(... ,example= 'error')
+    exceptionMsg  : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
 
 
 class DrugAmntQuery_ResponseModel(BaseModel):
 
-    drugAmntId      : int = Field(... ,example= 14)
-    drugAmntCode    : str = Field(... ,example= '14')
-    drugAmntSumry   : str
-    drugAmntLatin   : str
-    drugAmntConcept : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
-
+    id : str = Field(... ,example= '46546823')
+    name       : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
+    
 
 class DrugInstrQuery_ResponseModel(BaseModel):
    
-    drugInstId      : str = Field(... ,example= 9)
-    drugInstCode    : str = Field(... ,example= '9')
-    drugInstSumry   : str = Field(... ,example= 'A.M')
-    drugInstLatin   : str = Field(... ,example= 'ante meridiem')
-    drugInstConcept : str = Field(... ,example= 'صبح، پيش از ظهر')
+    id : str = Field(... ,example= '1354954')
+    name       : str = Field(... ,example= 'صبح، پيش از ظهر')
 
 
 class Examples:
 
+    check_drugs ={
+                'normal': {
+                    'summary': 'without error and warning',
+                    'description': 'everything is ok',
+                    'value':{
+                        'exception' : False,
+                        'drugs': [
+                            {
+                            'drugId': '897986' ,
+                            'drugName': 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL',
+                            'exceptionType': 'ok', 
+                            'exceptionMsg' : []
+                        }
+                        ]
+                    }
+                } ,
+
+                'error': {
+                    'summary': 'having a error',
+                    'description': 'Drug combinations or drug coverage do not overlap',
+                    'value':{
+                        'exception' : True,
+                        'drugs': [
+                            {
+                            'drugId': '897986' ,
+                            'drugName': 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL',
+                            'exceptionType': 'error', 
+                            'exceptionMsg' : ['تداخل دارویی وجود درد']
+                        }
+                        ]
+                    }
+                } ,
+                'warning': {
+                    'summary': 'having a warning',
+                    'description': 'Insurance is not granted',
+                    'value':{
+                        'exception' : True,
+                        'drugs': [
+                            {
+                            'drugId': '897986' ,
+                            'drugName': 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL',
+                            'exceptionType': 'warning', 
+                            'exceptionMsg' : ['سقف پذیرش بیمه پر شده و تمامی هزینه ها به صورت آزاد محاسبه میشود']
+                        }
+                        ]
+                    }
+                }
+    }
+
     drug_query = {
-                'match': {
+                'phrase': {
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
-                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'match' : 'Ada'
+                        'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+                        'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
+                        'phrase' : 'Ada'
                     }
                 } ,
 
@@ -100,19 +196,21 @@ class Examples:
                     'summary': 'get all the items',
                     'description': 'If the value is empty, All values will be returned',
                     'value':{
-                        'apiKey' : '640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'match':''
+                        'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+                        'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
+                        'phrase':''
                     }
                 }
     }
 
     drug_amnt_query = {
-                'match': {
+                'phrase': {
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
-                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'match' : 'قاشق غذاخوري'
+                        'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+                        'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
+                        'phrase' : 'قاشق غذاخوري'
                     }
                 } ,
 
@@ -120,63 +218,89 @@ class Examples:
                     'summary': 'get all the items',
                     'description': 'If the value is empty, All values will be returned',
                     'value':{
-                        'apiKey' : '640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'match':''
+                        'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+                        'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
+                        'phrase':''
                     }
                 }
     }    
 
     drug_instr_query = {
-                'match': {
+                'phrase': {
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
-                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'match' : 'صبح'
+                        'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+                        'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
+                        'phrase' : 'صبح'
                     }
                 } ,
 
+                
                 'get_all': {
                     'summary': 'get all the items',
                     'description': 'If the value is empty, All values will be returned',
                     'value':{
-                        'apiKey' : '640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'match':''
+                        'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+                        'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
+                        'phrase':''
                     }
                 }
     }    
 
-    check_drgus = {
-                'check': {
-                    'summary': 'check drugs',
-                    'description': '',
-                    'value':{
-
-                        'apiKey':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                    }
-                } ,
-
-    }    
 
 
 @router.get("/drugs" ,response_model= List[DrugQuery_ResponseModel]) 
-async def drug_query(match: drugQueryModel= Body(... ,examples= Examples.drug_query)):
+async def drug_query(phrase: drugQueryModel= Body(... ,examples= Examples.drug_query)):
     
-    ls_match = await redis._zscan('GlobalDrug' , match)
-    return ls_match
+    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
+    return ls_phrase
 
 
 @router.get("/drug-amnt" ,response_model= List[DrugAmntQuery_ResponseModel]) 
-async def drug_amnt_query(match: drugAmntQueryModel= Body(... ,examples= Examples.drug_amnt_query )):
+async def drug_amnt_query(phrase: drugAmntQueryModel= Body(... ,examples= Examples.drug_amnt_query )):
     
-    ls_match = await redis._zscan('GlobalDrugAmnt' , match)
-    return ls_match
+    ls_phrase = await redis._zscan('GlobalDrugAmnt' , phrase)
+    return ls_phrase
 
 
 @router.get("/drug-instr" ,response_model= List[DrugInstrQuery_ResponseModel]) 
-async def drug_instr_query(match: drugInstrQueryModel= Body(... ,examples= Examples.drug_instr_query)):
+async def drug_instr_query(phrase: drugInstrQueryModel= Body(...)):
 
-    ls_match = await redis._zscan('GlobalDrugInstr' , match)
-    return ls_match 
+    ls_phrase = await redis._zscan('GlobalDrugInstr' , phrase)
+    return ls_phrase 
+
+
+@router.get("/experimentation" ,response_model= List[ExperimentationQuery_ResponseModel]) 
+async def drug_query(phrase: ExperimentationModel= Body(... )):
+    
+    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
+    return ls_phrase
+
+@router.get("/physiotherapy" ,response_model= List[PhysiotherapyQuery_ResponseModel]) 
+async def drug_query(phrase: PhysiotherapyModel= Body(... )):
+    
+    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
+    return ls_phrase
+
+@router.get("/imaging" ,response_model= List[ImagingQuery_ResponseModel]) 
+async def drug_query(phrase: ImagingModel= Body(... )):
+    
+    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
+    return ls_phrase
+
+@router.get("/service" ,response_model= List[ServiceQuery_ResponseModel]) 
+async def drug_query(phrase: ServiceModel= Body(... )):
+    
+    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
+    return ls_phrase
+
+
+
+# @router.get("/check" ,response_model= List[CheckDrug_ResponseModel]) 
+# async def drug_instr_query(phrase: CheckDrugModel= Body(... ,examples= Examples.check_drugs)):
+
+#     ls_phrase = await redis._zscan('GlobalDrugInstr' , phrase)
+#     return ls_phrase 
 
 
