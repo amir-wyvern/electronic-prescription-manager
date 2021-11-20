@@ -5,13 +5,13 @@ from pydantic import BaseModel ,Field
 
 router = APIRouter(
     prefix="/visit",
-    tags=["visit"]
+    tags=["Visit"]
     )
 
 class VisitModel(BaseModel):
 
-    national_number : str = Field(... ,max_length= 10 ,min_length= 10)
-    numberphone     : str = Field(... ,max_length= 11 ,min_length= 11) 
+    doctorId        : str 
+    patientId        : str 
 
 
 class VisitResponse(BaseModel):
