@@ -5,7 +5,7 @@ from typing import List, Optional
 
 router = APIRouter(
     prefix="/presc",
-    tags=["presc"]
+    tags=["Prescription"]
     )
 
 class DrugsModel(BaseModel):
@@ -51,7 +51,7 @@ class PrescriptionModel(BaseModel):
     imaging         : List[ImageingModel]
     drugs           : List[DrugsModel]
     services        : List[ServicesModel]
-    reference       : List[ReferenceModel]
+    # reference       : List[ReferenceModel]
 
 
 class PrescriptionRequestModel(BaseModel):
