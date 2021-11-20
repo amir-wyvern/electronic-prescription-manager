@@ -8,6 +8,7 @@ from .routers import patient
 from .routers import login
 from .routers import services
 from .routers import doctor
+from .routers import visit
 from .async_redis import redis
 
 REDIS_HOST = 'localhost'
@@ -40,14 +41,16 @@ api = FastAPI(
 api.include_router(patient.router)
 api.include_router(login.router)
 api.include_router(services.router)
-api.include_router(doctor.router)
+# api.include_router(doctor.router)
 api.include_router(prescription.router)
+api.include_router(visit.router)
 
 
 @api.on_event("startup")
 async def startup_event():
     
     redis.connect(REDIS_HOST ,REDIS_PORT)
+
 
 @api.on_event("shutdown")
 async def startup_event():
