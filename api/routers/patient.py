@@ -9,7 +9,7 @@ from ..insuranceAPI.insurance_handler import Pateint
 
 router = APIRouter(
     prefix="/patient",
-    tags=["patient"] 
+    tags=["Patient"] 
     )
 
 
