@@ -15,6 +15,7 @@ router = APIRouter(
     tags=["doctor"]
     )
 
+
 class drugQueryModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
@@ -25,16 +26,15 @@ class drugQueryModel(BaseModel):
 class drugAmntQueryModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
     match     : str = Field(... ,max_length=150 )
 
 
 class drugInstrQueryModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId : str = Field(... ,min_length=1 ,max_length=30 )
+    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
     match     : str = Field(... ,max_length=150 )
-
 
 class ServiceType(BaseModel):
 
@@ -58,10 +58,10 @@ class ItemCheckDrug(BaseModel):
 
 class RespCheckDrug(BaseModel):
     
-    drugId   : str = Field(... ,example= '897986')
-    drugName : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
+    drugId        : str = Field(... ,example= '897986')
+    drugName      : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
     exceptionType : str = Field(... ,example= 'error')
-    exceptionMsg : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
+    exceptionMsg  : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
 
 
 class CheckDrugModel(BaseModel):
@@ -74,56 +74,19 @@ class CheckDrugModel(BaseModel):
 class CheckDrug_ResponseModel(BaseModel):
 
     exception : str = Field(... ,example= 'error')
-    drugs : List[RespCheckDrug]
-
-
-    # agreementFlag     : str
-    # bGType            : str = Field(... ,example= '1')
-    # dentalServiceType : str
-    # doseCode          : str
-    # gSrvCode          : str
-    # hosprescType      : str
-    # srvName           : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
-    # srvName2          : str
-    # srvPrice          : int = Field(... ,example= 0)
-    # srvPriceDate      : str = Field(... ,example= '13980216')
-    # isDeleted         : str
-    # parTarefGrp       : str
-    # srvBimSw          : str = Field(... ,example= '2')
-    # srvCode           : str = Field(... ,example= '52198')
-    # srvCodeComplete   : str = Field(... ,example= '0000052198')
-    # srvId             : int = Field(... ,example= 183957)
-    # srv_id            : str 
-    # status            : str = Field(... ,example= '2')
-    # statusstDate      : str = Field(... ,example= '13980216')
-    # visible           : str = Field(... ,example= '1')
-    # wsSrvCode         : str = Field(... ,example= '52198')
-
-    # srvType           : ServiceType
+    drugs     : List[RespCheckDrug]
 
 
 class DrugAmntQuery_ResponseModel(BaseModel):
 
     drugAmntId : str = Field(... ,example= '46546823')
-    name     : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
+    name       : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
     
-    # drugAmntId      : int = Field(... ,example=  14)
-    # drugAmntCode    : str = Field(... ,example= '14')
-    # drugAmntSumry   : str
-    # drugAmntLatin   : str
-    # drugAmntConcept : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
-
 
 class DrugInstrQuery_ResponseModel(BaseModel):
    
     drugInstId : str = Field(... ,example= '1354954')
-    name : str = Field(... ,example= 'صبح، پيش از ظهر')
-
-    # drugInstId      : str = Field(... ,example= 9)
-    # drugInstCode    : str = Field(... ,example= '9')
-    # drugInstSumry   : str = Field(... ,example= 'A.M')
-    # drugInstLatin   : str = Field(... ,example= 'ante meridiem')
-    # drugInstConcept : str = Field(... ,example= 'صبح، پيش از ظهر')
+    name       : str = Field(... ,example= 'صبح، پيش از ظهر')
 
 
 class Examples:
