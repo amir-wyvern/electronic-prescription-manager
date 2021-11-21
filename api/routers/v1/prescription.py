@@ -4,7 +4,7 @@ from typing import List, Optional
 
 
 router = APIRouter(
-    prefix="/presc",
+    prefix="/v1/presc",
     tags=["Prescription"]
     )
 

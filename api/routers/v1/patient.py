@@ -4,11 +4,11 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel ,Field
 from uuid import uuid4
 
-from ..async_redis.redis_obj import redis
-from ..insuranceAPI.insurance_handler import Pateint
+from async_redis.redis_obj import redis
+from insuranceAPI.insurance_handler import Pateint
 
 router = APIRouter(
-    prefix="/patient",
+    prefix="/v1/patient",
     tags=["Patient"] 
     )
 

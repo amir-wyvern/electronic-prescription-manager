@@ -6,11 +6,11 @@ from pydantic import BaseModel ,Field
 import hashlib
 from uuid import uuid4
 
-from ..models.DOCTOR_MODEL import NobanDoctor
-from ..insuranceAPI import Doctor
+from models.DOCTOR_MODEL import NobanDoctor
+from insuranceAPI.insurance_handler import Doctor
 
 router = APIRouter(
-    prefix='/login',
+    prefix='/v1/login',
     tags=["Login"]
     )
 

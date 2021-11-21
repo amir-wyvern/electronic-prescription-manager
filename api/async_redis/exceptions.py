@@ -1,5 +1,3 @@
-from ..logs import Logger
-logger = Logger()
 
 class ExceptionHandler(Exception):
 

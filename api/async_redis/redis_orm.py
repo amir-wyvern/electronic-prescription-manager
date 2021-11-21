@@ -1,7 +1,6 @@
-from .redis_obj import redis
-from ..logs import Logger
-from .exceptions import ExceptionHandler
-from .fields import (
+from async_redis.redis_obj import redis
+from async_redis.exceptions import ExceptionHandler
+from async_redis.fields import (
     Field ,
     FieldHash,
     Instr ,
@@ -13,7 +12,6 @@ from .fields import (
     StringField
     )
 
-logger= Logger()
 
 class ModelMetaclass(type):
 

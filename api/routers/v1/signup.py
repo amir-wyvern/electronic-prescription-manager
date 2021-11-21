@@ -10,7 +10,7 @@ from models.DOCTOR_MODEL import DoctorInfo
 from insuranceAPI import Doctor
 
 router = APIRouter(
-    prefix="/signup",
+    prefix="/v1/signup",
     tags=["signup"]
     )
 

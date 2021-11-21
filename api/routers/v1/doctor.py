@@ -1,63 +1,35 @@
+from os import error, name
 from typing import Dict, List
 from fastapi import APIRouter ,Body
 from pydantic import BaseModel ,Field
+from pydantic.errors import BytesError
+from async_redis.redis_orm import redis
 
-from ..async_redis.redis_obj import redis
-
-from ..logs import Logger
-logger = Logger()
-
+import logging
 router = APIRouter(
-    prefix="/srvc",
-    tags=["Services"]
+    prefix="/v1/doctor",
+    tags=["doctor"]
     )
-
 
 class drugQueryModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
     doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )
+    match     : str = Field(... ,max_length=150 )
 
 
 class drugAmntQueryModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
     doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )
+    match     : str = Field(... ,max_length=150 )
 
 
 class drugInstrQueryModel(BaseModel):
 
     patientId : str = Field(... ,min_length=1 ,max_length=30 )
     doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )
-
-
-class ExperimentationModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )    
-    
-class PhysiotherapyModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )    
-class ImagingModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )    
-
-
-class ServiceModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    phrase     : str = Field(... ,max_length=150 )    
-
+    match     : str = Field(... ,max_length=150 )
 
 class ServiceType(BaseModel):
 
@@ -70,38 +42,21 @@ class ServiceType(BaseModel):
 
 class DrugQuery_ResponseModel(BaseModel):
 
-    id      : str = Field(... ,example= '8786522')
-    name    : str = Field(... )
-    favorit : bool 
-
-class PhysiotherapyQuery_ResponseModel(BaseModel):
-
-    id      : str = Field(... ,example= '1332457')
-    name    : str = Field(...)
-    favorit : bool 
-class ImagingQuery_ResponseModel(BaseModel):
-
-    id      : str = Field(... ,example= '8975642')
-    name    : str = Field(...)
-    favorit : bool 
-class ServiceQuery_ResponseModel(BaseModel):
-
-    id      : str = Field(... ,example= '4568752')
-    name    : str = Field(...)
-    favorit : bool 
-
-
-
-class ExperimentationQuery_ResponseModel(BaseModel):
-
-    id  : str = Field(... ,example= '183957')
-    name    : str = Field(... )
-    favorit : bool 
-
+    drugId : str = Field(... ,example= '183957')
+    name   : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
+    
 
 class ItemCheckDrug(BaseModel):
 
     drugId : str = Field(... ,example= '897986')
+
+
+class RespCheckDrug(BaseModel):
+    
+    drugId        : str = Field(... ,example= '897986')
+    drugName      : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
+    exceptionType : str = Field(... ,example= 'error')
+    exceptionMsg  : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
 
 
 class CheckDrugModel(BaseModel):
@@ -113,26 +68,23 @@ class CheckDrugModel(BaseModel):
 
 class CheckDrug_ResponseModel(BaseModel):
 
-    id            : str = Field(... ,example= '897986')
-    drugName      : str = Field(... ,example= 'ADAPALENE/BENZOYL PEROXIDE  0.1 %/2.5 % TOPICAL GEL')
-    exceptionType : str = Field(... ,example= 'error')
-    exceptionMsg  : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
+    exception : str = Field(... ,example= 'error')
+    drugs     : List[RespCheckDrug]
 
 
 class DrugAmntQuery_ResponseModel(BaseModel):
 
-    id : str = Field(... ,example= '46546823')
+    drugAmntId : str = Field(... ,example= '46546823')
     name       : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
     
 
 class DrugInstrQuery_ResponseModel(BaseModel):
    
-    id : str = Field(... ,example= '1354954')
+    drugInstId : str = Field(... ,example= '1354954')
     name       : str = Field(... ,example= 'صبح، پيش از ظهر')
 
 
 class Examples:
-
 
     check_drugs ={
                 'normal': {
@@ -184,13 +136,13 @@ class Examples:
     }
 
     drug_query = {
-                'phrase': {
+                'match': {
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
                         'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
                         'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'phrase' : 'Ada'
+                        'match' : 'Ada'
                     }
                 } ,
 
@@ -200,19 +152,19 @@ class Examples:
                     'value':{
                         'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
                         'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'phrase':''
+                        'match':''
                     }
                 }
     }
 
     drug_amnt_query = {
-                'phrase': {
+                'match': {
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
                         'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
                         'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'phrase' : 'قاشق غذاخوري'
+                        'match' : 'قاشق غذاخوري'
                     }
                 } ,
 
@@ -222,19 +174,19 @@ class Examples:
                     'value':{
                         'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
                         'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'phrase':''
+                        'match':''
                     }
                 }
     }    
 
     drug_instr_query = {
-                'phrase': {
+                'match': {
                     'summary': 'Get a special item',
                     'description': 'If value is sent, Similar values will be returned',
                     'value':{
                         'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
                         'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'phrase' : 'صبح'
+                        'match' : 'صبح'
                     }
                 } ,
 
@@ -245,64 +197,36 @@ class Examples:
                     'value':{
                         'patientId' : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
                         'doctorId':'640b4ea5-69b4-46a1-a97f-0405aaee6474' ,
-                        'phrase':''
+                        'match':''
                     }
                 }
     }    
 
 
-
-@router.get("/drugs" ,response_model= List[DrugQuery_ResponseModel]) 
-async def drug_query(phrase: drugQueryModel= Body(... ,examples= Examples.drug_query)):
+@router.get("/drug" ,response_model= List[DrugQuery_ResponseModel]) 
+async def drug_query(match: drugQueryModel= Body(... ,examples= Examples.drug_query)):
     
-    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
-    return ls_phrase
-
+    ls_match = await redis._zscan('doctor:' , match)
+    ls_match = await redis._zscan('GlobalDrug' , match)
+    return ls_match
 
 @router.get("/drug-amnt" ,response_model= List[DrugAmntQuery_ResponseModel]) 
-async def drug_amnt_query(phrase: drugAmntQueryModel= Body(... ,examples= Examples.drug_amnt_query )):
+async def drug_amnt_query(match: drugAmntQueryModel= Body(... ,examples= Examples.drug_amnt_query )):
     
-    ls_phrase = await redis._zscan('GlobalDrugAmnt' , phrase)
-    return ls_phrase
+    ls_match = await redis._zscan('GlobalDrugAmnt' , match)
+    return ls_match
+
+@router.get("/drug-inst" ,response_model= List[DrugInstrQuery_ResponseModel]) 
+async def drug_instr_query(match: drugInstrQueryModel= Body(... ,examples= Examples.drug_instr_query)):
+
+    ls_match = await redis._zscan('GlobalDrugInstr' , match)
+    return ls_match 
 
 
-@router.get("/drug-instr" ,response_model= List[DrugInstrQuery_ResponseModel]) 
-async def drug_instr_query(phrase: drugInstrQueryModel= Body(...)):
+@router.get("/drug/check" ,response_model= CheckDrug_ResponseModel)  
+async def check_drugs(match: CheckDrugModel= Body(... )):
 
-    ls_phrase = await redis._zscan('GlobalDrugInstr' , phrase)
-    return ls_phrase 
-
-
-@router.get("/experimentation" ,response_model= List[ExperimentationQuery_ResponseModel]) 
-async def experimentation_query(phrase: ExperimentationModel= Body(... )):
-    
-    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
-    return ls_phrase
-
-@router.get("/physiotherapy" ,response_model= List[PhysiotherapyQuery_ResponseModel]) 
-async def physiotherapy_query(phrase: PhysiotherapyModel= Body(... )):
-    
-    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
-    return ls_phrase
-
-@router.get("/imaging" ,response_model= List[ImagingQuery_ResponseModel]) 
-async def imaging_query(phrase: ImagingModel= Body(... )):
-    
-    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
-    return ls_phrase
-
-@router.get("/service" ,response_model= List[ServiceQuery_ResponseModel]) 
-async def service_query(phrase: ServiceModel= Body(... )):
-    
-    ls_phrase = await redis._zscan('GlobalDrug' , phrase)
-    return ls_phrase
-
-
-
-# @router.get("/check" ,response_model= List[CheckDrug_ResponseModel]) 
-# async def drug_instr_query(phrase: CheckDrugModel= Body(... ,examples= Examples.check_drugs)):
-
-#     ls_phrase = await redis._zscan('GlobalDrugInstr' , phrase)
-#     return ls_phrase 
+    ls_match = await redis._zscan('GlobalDrugInstr' , match)
+    return ls_match 
 
 

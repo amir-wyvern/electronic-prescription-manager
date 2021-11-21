@@ -4,7 +4,7 @@ from fastapi.param_functions import File
 from pydantic import BaseModel ,Field
 
 router = APIRouter(
-    prefix="/visit",
+    prefix="/v1/visit",
     tags=["Visit"]
     )
 

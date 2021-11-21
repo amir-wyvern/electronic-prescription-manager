@@ -1,6 +1,6 @@
-from ..async_redis.redis_obj import redis
+from async_redis.redis_obj import redis
 
-from ..models.DOCTOR_MODEL import DoctorSession
+from models.DOCTOR_MODEL import DoctorSession
 import aiohttp
 import asyncio 
 

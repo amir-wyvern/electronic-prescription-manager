@@ -1,49 +1,49 @@
 from fastapi import Depends, FastAPI
 
-from api.routers import prescription
+from api.routers.v1 import prescription as presc_v1
+import sys
+import os
+print(sys.path)
+dire = sys.path[0] + '/api/'
+print(dire)
+sys.path.insert(0, dire )
 
 # from .dependencies import get_query_token, get_token_header
-
-from .routers import patient
-from .routers import login
-from .routers import services
-from .routers import doctor
-from .routers import visit
-from .async_redis import redis
+from .routers import v1
+from routers.v1 import patient  as patient_v1
+from routers.v1 import login    as login_v1
+from routers.v1 import services as services_v1
+from routers.v1 import doctor   as doctor_v1
+from routers.v1 import visit    as visit_v1
+  
+from async_redis.redis_orm import redis
+from fastConfig import Swagger
+from fastapi.middleware.cors import CORSMiddleware
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
 
-description = """
-### *Electronic Prescription Manager*
-*epm is a interface api that allows the registration and management of electronic prescriptions
-It also has other facilities such as better clinic management and patient medical records*
-
-### *Features*
-- *Register ,Edit & Remove electronic prescription*
-- *Clinic management*
-- ✨ *Patient medical record*✨
-
-> *This version is still under development* 
-> *and some of its features may not work*
- 
-  """
-
 api = FastAPI( 
-        title="EPM Backend",
-        description=description,
-        version="0.0.1",
-        docs_url = '/docs',  # swagger UI
-        redoc_url ='/'     # Redoc UI
+    **Swagger.attrs
 )
 
-api.include_router(patient.router)
-api.include_router(login.router)
-api.include_router(services.router)
-# api.include_router(doctor.router)
-api.include_router(prescription.router)
-api.include_router(visit.router)
+origins = ['*']
+
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+api.include_router(patient_v1.router)
+api.include_router(login_v1.router)
+api.include_router(services_v1.router)
+# api.include_router(doctor_v1.router)
+api.include_router(presc_v1.router)
+api.include_router(visit_v1.router)
 
 
 @api.on_event("startup")

@@ -1,7 +1,5 @@
 from aioredis import from_url
-from ..logs import Logger
-
-logger = Logger()
+import logging
 
 class Redis ():
 
@@ -24,14 +22,14 @@ class Redis ():
 
         if not self.__redis:
             self.__redis = from_url(f'redis://{host}:{port}' ,decode_responses= True)
-            logger.debug('connected to database')
+            logging.debug('connected to database')
     
     async def close(self) :
 
         if self.__redis :
 
             await self.__redis.close()
-            logger.debug('closed connection to database')
+            logging.debug('closed connection to database')
 
     async def _set(self ,key ,value):
 

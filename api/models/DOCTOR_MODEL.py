@@ -1,5 +1,5 @@
-from ..async_redis import Model
-from ..async_redis import (
+from async_redis.redis_orm import Model
+from async_redis.fields import (
         Field ,
         FieldHash,
         Instr ,
