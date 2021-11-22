@@ -1,5 +1,5 @@
 from fastapi.encoders import jsonable_encoder
-from fastapi import APIRouter ,Body , status
+from fastapi import APIRouter ,Body , status ,Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel ,Field
 from uuid import uuid4
@@ -81,9 +81,13 @@ async def save_patient_numberPhone(model: SaveNumberPhone= Body(...)):
 
 
 @router.get("/" ,response_model= PatientInfo ) 
-async def fetch_patient_info(model: FetchNationalNumber= Body(...)):
+async def fetch_patient_info(doctorID: str = Query(
+                                        None ,max_length=50 , min_length=2 ,regex='[0-9]+' ) ,
+                            nationalNumber : str = Query(
+                                        None ,max_length=10 , min_length=10 ,regex='[0-9]{10}' ) ):
 
-    if checkNationalNumber(model.nationalNumber) == False:
+    print(nationalNumber , doctorID)
+    if checkNationalNumber(nationalNumber) == False:
 
         return JSONResponse(
             status_code= status.HTTP_422_UNPROCESSABLE_ENTITY,
