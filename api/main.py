@@ -26,15 +26,15 @@ api = FastAPI(
     **Swagger.attrs
 )
 
-# origins = ['*']
+origins = ['*']
 
-# api.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=False,
-#     allow_methods=['*'],
-#     allow_headers=['*'],
-# )
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 api.include_router(patient_v1.router)
 api.include_router(login_v1.router)
