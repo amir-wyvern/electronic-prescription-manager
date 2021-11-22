@@ -80,7 +80,7 @@ async def save_patient_numberPhone(model: SaveNumberPhone= Body(...)):
             ) 
 
 
-@router.get("/" ,response_model= PatientInfo ,responses= {422: {'model': ErrorModel}}) 
+@router.get("/" ,response_model= PatientInfo ) 
 async def fetch_patient_info(model: FetchNationalNumber= Body(...)):
 
     if checkNationalNumber(model.nationalNumber) == False:
@@ -115,5 +115,5 @@ async def fetch_patient_info(model: FetchNationalNumber= Body(...)):
     'insurance'    : 'سلامت',
     'subInsurance' : 'روستاییان',
     'exDate'       : '1786299942'}
-    
+
     return PatientInfo
