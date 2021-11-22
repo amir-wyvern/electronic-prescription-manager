@@ -2,14 +2,12 @@ from fastapi import Depends, FastAPI
 
 from api.routers.v1 import prescription as presc_v1
 import sys
-import os
-print(sys.path)
+
+
 dire = sys.path[0] + '/api/'
-print(dire)
 sys.path.insert(0, dire )
 
 # from .dependencies import get_query_token, get_token_header
-from .routers import v1
 from routers.v1 import patient  as patient_v1
 from routers.v1 import login    as login_v1
 from routers.v1 import services as services_v1
@@ -56,4 +54,3 @@ async def startup_event():
 async def startup_event():
     
     await redis.close()
-

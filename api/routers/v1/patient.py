@@ -40,8 +40,8 @@ def checkNationalNumber(nationalNumber : str) -> bool:
 
 class FetchNationalNumber(BaseModel):
 
-    doctorID       : str = Field(... ,max_length=30 ,min_length=40 ,regex='[0-9]+'    ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') 
-    nationalNumber : str = Field(... ,max_length=10 ,min_length=10 ,regex='[0-9]{10}' ,example= '08401234567')
+    doctorID       : str = Field(... ,max_length=100 ,min_length=1 ,regex='[0-9]+'    ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') 
+    nationalNumber : str = Field(... ,max_length=10 ,min_length=10 ,regex='[0-9]{10}' ,example= '0840123456')
 
 
 class SaveNumberPhone(BaseModel):
@@ -90,12 +90,12 @@ async def fetch_patient_info(model: FetchNationalNumber= Body(...)):
             content= jsonable_encoder({"detail": 'This national number is not valid'}),
             )
 
-    
+    print('sdsdfs================================')    
     # ====== Check the existence of a national number in the sabteahval system ======
     pass
     # ===============================================================================
     
-    resp = await Pateint.getInfo(model.nationalNumber)
+    # resp = await Pateint.getInfo(model.nationalNumber)
 
     # ====== if insurance patient is salamat ,so we have to get samad code ==========
     pass
@@ -105,4 +105,15 @@ async def fetch_patient_info(model: FetchNationalNumber= Body(...)):
     pass
     # =================================================================================================
 
+    PatientInfo = {
+    'patienId'     : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+    'firstName'    : 'امیر',
+    'lastName'     : 'حدادیان',
+    'fullName'     : 'امیر حدادیان',
+    'numberPhone'  : '09151234567',
+    'birthDate'    : '1636299942',
+    'insurance'    : 'سلامت',
+    'subInsurance' : 'روستاییان',
+    'exDate'       : '1786299942'}
+    
     return PatientInfo

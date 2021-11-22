@@ -89,7 +89,6 @@ class ServiceQuery_ResponseModel(BaseModel):
     favorit : bool 
 
 
-
 class ExperimentationQuery_ResponseModel(BaseModel):
 
     id  : str = Field(... ,example= '183957')
@@ -252,7 +251,7 @@ class Examples:
 
 @router.get("/drugs" ,response_model= List[DrugQuery_ResponseModel]) 
 async def drug_query(phrase: drugQueryModel= Body(... ,examples= Examples.drug_query)):
-    
+
     ls_phrase = await redis._zscan('GlobalDrug' , phrase)
     return ls_phrase
 
