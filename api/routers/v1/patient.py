@@ -3,6 +3,7 @@ from fastapi import APIRouter ,Body , status ,Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel ,Field
 from uuid import uuid4
+from typing import Union
 
 from async_redis.redis_obj import redis
 from insuranceAPI.insurance_handler import Pateint
@@ -20,6 +21,8 @@ def checkNationalNumber(nationalNumber : str) -> bool:
     """
 
     sum = 0
+    print('------------------')
+    print(nationalNumber)
     checkNumber = int(nationalNumber[-1])
     otherNumbers = nationalNumber[:-1]
 
@@ -40,14 +43,15 @@ def checkNationalNumber(nationalNumber : str) -> bool:
 
 class FetchNationalNumber(BaseModel):
 
-    doctorID       : str = Field(... ,max_length=100 ,min_length=1 ,regex='[0-9]+'    ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') 
+    doctorId       : str = Field(... ,max_length=100 ,min_length=1 ,regex='[0-9]+'    ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') 
     nationalNumber : str = Field(... ,max_length=10 ,min_length=10 ,regex='[0-9]{10}' ,example= '0840123456')
 
 
 class SaveNumberPhone(BaseModel):
 
-    pateintId   : str = Field(... ,max_length=100 ,min_length=2     ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
-    numberPhone : str = Field(... ,max_length=11 ,min_length=11 ,regex='[0-9]{11}' ,example= '09150123456')
+    doctorId    : str = Field(... ,max_length=100 ,min_length=1 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') 
+    pateintId   : str = Field(... ,max_length=100 ,min_length=2 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
+    numberPhone : str = Field(... ,max_length=11 ,min_length=11 ,example= '09150123456')
 
 
 class PatientInfo(BaseModel):
@@ -66,6 +70,21 @@ class PatientInfo(BaseModel):
 class ErrorModel(BaseModel):
 
     detail : str = Field(... ,example= 'Username or password is incorrect!' )
+
+
+
+# class UnionNumberPhone(BaseModel): # This will Hold the Union
+#     Child: Union[child1, child2, child3] #The Union Required
+
+#     class Config: #This is inside UnionChild, do not place it outside. 
+#         schema_extra = {
+#             "example": {                    #Mandatory field, this holds your example. Define Your Field from here. 
+#                 "id": "1",
+#                 "error": "Some Random String",
+#                 "user": "OSAS UVUWE",
+#                 "user_data": {"oh": "oh_no"},
+#             }
+#         }
 
 @router.post('/numberphone')
 async def save_patient_numberPhone(model: SaveNumberPhone= Body(...)):
