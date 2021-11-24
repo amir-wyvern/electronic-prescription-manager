@@ -67,38 +67,48 @@ class PrescriptionRequestModel(BaseModel):
     doctorId      : str  = Field(...)
     prescription  : PrescriptionModel
 
+class DrugDetailModel(BaseModel):
 
-class PrescriptionResponseModel(BaseModel):
+    drugAmnt : str
+    drugInnst : str
+    numberOfDrug :str
+
+class DrugPrescModel(BaseModel):
     
-    prescId : str
+    doctorId : str
+    patientId : str
+
+    drugId :str 
+    description : str
+    detailDrug : DrugDetailModel
 
 
-@router.post("/drug" ,response_model= PrescriptionResponseModel) 
-async def drug_prescription(item: PrescriptionRequestModel= Body(...)):
+@router.post("/drug" ) 
+async def drug_prescription(item: DrugPrescModel= Body(...)):
     return item
 
-@router.post("/exper" ,response_model= PrescriptionResponseModel) 
+@router.post("/exper" ,response_model= DrugPrescModel) 
 async def experimentation_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
-@router.post("/physio" ,response_model= PrescriptionResponseModel) 
+@router.post("/physio" ,response_model= DrugPrescModel) 
 async def physiotherapy_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
-@router.post("/imaging" ,response_model= PrescriptionResponseModel) 
+@router.post("/imaging" ,response_model= DrugPrescModel) 
 async def imaging_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
-@router.post("/service" ,response_model= PrescriptionResponseModel) 
+@router.post("/service" ,response_model= DrugPrescModel) 
 async def service_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
-# @router.post("/refrence" ,response_model= PrescriptionResponseModel) 
+# @router.post("/refrence" ,response_model= DrugPrescModel) 
 # async def refrence_prescription(item: PrescriptionRequestModel= Body(...)):
 #     return item
 
-@router.post("/submit" ,response_model= PrescriptionResponseModel) 
-async def refrence_prescription(item: PrescriptionRequestModel= Body(...)):
+@router.post("/submit" ,response_model= DrugPrescModel) 
+async def save_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
 
@@ -114,11 +124,11 @@ class PrescriptionDeleteModel(BaseModel):
     prescription : PrescriptionModel
 
 @router.delete("/delete" ) 
-async def save_prescription(item: PrescriptionDeleteModel= Body(...)):
+async def delete_prescription(item: PrescriptionDeleteModel= Body(...)):
     return item
 
 @router.put("/update" ) 
-async def save_prescription(item: PrescriptionRequestModel= Body(...)):
+async def update_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
 
 @router.get("/detail" ) 
