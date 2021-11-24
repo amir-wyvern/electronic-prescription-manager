@@ -46,7 +46,7 @@ class FetchNationalNumber(BaseModel):
 
 class SaveNumberPhone(BaseModel):
 
-    pateintId   : str = Field(... ,max_length=30 ,min_length=40 ,regex='[0-9]+'    ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
+    pateintId   : str = Field(... ,max_length=100 ,min_length=2     ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
     numberPhone : str = Field(... ,max_length=11 ,min_length=11 ,regex='[0-9]{11}' ,example= '09150123456')
 
 
@@ -86,7 +86,6 @@ async def fetch_patient_info(doctorID: str = Query(
                             nationalNumber : str = Query(
                                         None ,max_length=10 , min_length=10 ,regex='[0-9]{10}',example='0840123456' ) ):
 
-    print(nationalNumber , doctorID)
     if checkNationalNumber(nationalNumber) == False:
 
         return JSONResponse(
@@ -94,7 +93,6 @@ async def fetch_patient_info(doctorID: str = Query(
             content= jsonable_encoder({"detail": 'This national number is not valid'}),
             )
 
-    print('sdsdfs================================')    
     # ====== Check the existence of a national number in the sabteahval system ======
     pass
     # ===============================================================================
@@ -121,3 +119,4 @@ async def fetch_patient_info(doctorID: str = Query(
     'exDate'       : '1786299942'}
 
     return PatientInfo
+    

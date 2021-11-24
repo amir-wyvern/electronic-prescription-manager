@@ -10,38 +10,45 @@ router = APIRouter(
 
 class DrugsModel(BaseModel):
 
-    code     : str 
+    id     : str 
     drugAmnt : str
     drugQty  : str
     number   : str
+    description : str
 
 
 class ExperimentationModel(BaseModel):
     
-    code   : str
-    number : str
-
+    id        : str
+    number      : str
+    description : str
 
 class ImageingModel(BaseModel):
-    code   : str
+
+    id   : str
     number : str
+    description : str
 
 
 class ServicesModel(BaseModel):
 
-    code   : str
+    id   : str
     number : str
-
+    description : str
+    
 
 class PhysiotherapyModel(BaseModel):
 
     id     : str
     number : str
+    description : str
 
 
 class ReferenceModel(BaseModel):
+
     id     : str
     number : str
+    description : str
 
 
 class PrescriptionModel(BaseModel):
@@ -66,8 +73,58 @@ class PrescriptionResponseModel(BaseModel):
     prescId : str
 
 
+@router.post("/drug" ,response_model= PrescriptionResponseModel) 
+async def drug_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
 
-@router.post("/" ,response_model= PrescriptionResponseModel) 
+@router.post("/exper" ,response_model= PrescriptionResponseModel) 
+async def experimentation_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
+
+@router.post("/physio" ,response_model= PrescriptionResponseModel) 
+async def physiotherapy_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
+
+@router.post("/imaging" ,response_model= PrescriptionResponseModel) 
+async def imaging_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
+
+@router.post("/service" ,response_model= PrescriptionResponseModel) 
+async def service_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
+
+# @router.post("/refrence" ,response_model= PrescriptionResponseModel) 
+# async def refrence_prescription(item: PrescriptionRequestModel= Body(...)):
+#     return item
+
+@router.post("/submit" ,response_model= PrescriptionResponseModel) 
+async def refrence_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
+
+
+class PrescriptionDeleteModel(BaseModel):
+
+    prescId : str
+    doctorId : str
+
+class PrescriptionDeleteModel(BaseModel):
+
+    prescId : str
+    doctorId : str
+    prescription : PrescriptionModel
+
+@router.delete("/delete" ) 
+async def save_prescription(item: PrescriptionDeleteModel= Body(...)):
+    return item
+
+@router.put("/update" ) 
 async def save_prescription(item: PrescriptionRequestModel= Body(...)):
     return item
+
+@router.get("/detail" ) 
+async def detail_prescription(item: PrescriptionRequestModel= Body(...)):
+    return item
+
+
+
 
