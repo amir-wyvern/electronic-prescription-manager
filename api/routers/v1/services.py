@@ -59,107 +59,98 @@ class ServiceType(BaseModel):
     statusstDate : str = Field(... ,example= '13940101')
     custType     : str = Field(... ,example= '3')
 
-
+# ===== Drug =====
 class DrugFavoritModel(BaseModel):
 
-    drugAmnt : Optional[str]
-    drugInnst : Optional[str]
-    numberOfDrug : Optional[str]
+    drugAmntName : Optional[str] = Field(... ,example= 'یک واحد')
+    drugAmntId : Optional[str] = Field(... ,example= '23')
+    drugInstName : Optional[str] = Field(... ,example= 'یک بار در روز')
+    drugInstId : Optional[str] = Field(... ,example= '69')
+    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class DrugModel(BaseModel):
 
     id      : str = Field(... ,example= '8786522')
-    name    : str = Field(... )
-    favorits :   Optional[List[DrugFavoritModel]]
+    name    : str = Field(... ,example= 'ANTI-D‬‬ ‫‪IMMUNOGLOBULIN‬‬ ‫‪INJECTION‬‬ INTRAMUSCULAR‬‬‫‪') 
+    favorit :   Optional[List[DrugFavoritModel]]
 
 class DrugQuery_ResponseModel(BaseModel):
 
-    drugs : List[DrugModel]
+    data : List[DrugModel] 
 
 
-class PhysiotherapyModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
-
+# ===== Physiotherapy =====
 class PhysioFavoritModel(BaseModel):
 
-    id : Optional[str]
-    name : Optional[str]
+    numberOfRequest : Optional[int] = Field(... ,example= 1)
+
+class PhysioModel(BaseModel):
+
+    id      : str = Field(... ,example= '4352234')
+    name    : str = Field(... ,example= 'اسکن استاتيک کف پا (Foot Scan) براي تعيين نقاط فشاري کف پا و تجويز کفي و يا اورتز مناسب')
+    favorit : Optional[List[PhysioFavoritModel]] 
 
 class PhysiotherapyQuery_ResponseModel(BaseModel):
 
-    id  : str = Field(... ,example= '183957')
-    name    : str = Field(... )
-    favorit : Optional[List[PhysioFavoritModel]] 
+    data : List[PhysioModel]
 
+
+# ===== Imaging =====
+class ImagingFavoritModel(BaseModel):
+
+    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class ImagingModel(BaseModel):
 
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
-
-class ImagingFavoritModel(BaseModel):
-
-    id : Optional[str]
-    name : Optional[str]
+    id      : str = Field(... ,example= '798454')
+    name    : str = Field(... ,example= 'سي تي اسکن ساق پا چپ بدون کنتراست') 
+    favorit : Optional[List[ImagingFavoritModel]] 
 
 class ImagingQuery_ResponseModel(BaseModel):
 
-    id  : str = Field(... ,example= '183957')
-    name    : str = Field(... )
-    favorit : Optional[List[ImagingFavoritModel]] 
+    data : List[ImagingModel]
 
+
+# ===== Doctor Service =====
+class DocServiceFavoritModel(BaseModel):
+
+    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class DocServiceModel(BaseModel):
 
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
-
-class DocServiceFavoritModel(BaseModel):
-
-    id : Optional[str]
-    name : Optional[str]
-
+    id  : str = Field(... ,example= '521692')
+    name    : str = Field(... ,example= 'پوستچروگرافي ديناميک کامپيوتري (صندلي چرخان)')
+    favorit : Optional[List[DocServiceFavoritModel]] 
+    
 class DocServiceQuery_ResponseModel(BaseModel):
 
-    id  : str = Field(... ,example= '183957')
-    name    : str = Field(... )
-    favorit : Optional[List[DocServiceFavoritModel]] 
+    data : List[DocServiceModel]
 
-
-class ExperimentationModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
- 
+# ===== Experimentation =====
 class ExperFavoritModel(BaseModel):
 
-    id : Optional[str]
-    name : Optional[str]
+    numberOfRequest : Optional[int] = Field(... ,example= 1)
+
+class ExperModel(BaseModel):
+
+    id      : str = Field(... ,example= '3453662') 
+    name    : str = Field(... ,example= 'اندازه گيري کمّي نوراپي نفرين در خون/سرم/پلاسما') 
+    favorit : Optional[List[ExperFavoritModel]] 
 
 class ExperimentationQuery_ResponseModel(BaseModel):
 
-    id  : str = Field(... ,example= '183957')
-    name    : str = Field(... )
-    favorit : Optional[List[ExperFavoritModel]] 
+    data : List[ExperModel]
 
 
 class ItemCheckDrug(BaseModel):
 
     drugId : str = Field(... ,example= '897986')
 
-
 class CheckDrugModel(BaseModel):
     
     doctorId    : str = Field(... ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')
     patientId   : str = Field(... ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
     drugs       : List[ItemCheckDrug] 
-
 
 class CheckDrug_ResponseModel(BaseModel):
 
@@ -169,16 +160,24 @@ class CheckDrug_ResponseModel(BaseModel):
     exceptionMsg  : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
 
 
+class DrugAmntModel(BaseModel):
+    
+    id : str = Field(... ,example= '465468')
+    name : str = Field(... ,example= 'یک واحد')
+
 class DrugAmntQuery_ResponseModel(BaseModel):
 
-    id : str = Field(... ,example= '46546823')
-    name : str = Field(... ,example= 'دو (2)  قاشق غذاخوري (10 سي سي)')
-    
+    drugAmnt : List[DrugAmntModel]
 
-class DrugInstrQuery_ResponseModel(BaseModel):
+    
+class DrugInstModel(BaseModel):
+
+    id   : str = Field(... ,example= '3452342')
+    name : str = Field(... ,example= 'یک بار در روز')
+
+class DrugInstQuery_ResponseModel(BaseModel):
    
-    id : str = Field(... ,example= '1354954')
-    name       : str = Field(... ,example= 'صبح، پيش از ظهر')
+   drugInst : List[DrugInstModel]
 
 
 class Examples:
@@ -303,86 +302,141 @@ class Examples:
 
 
 @router.get("/drugs" ,response_model= DrugQuery_ResponseModel) 
-async def drug_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60),
-                    clause : str = Query(None, min_length=1, max_length=60)):
+async def drug_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                    doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
+                    clause : str = Query(None, min_length=1, max_length=60 ,example= 'ANTY')):
 
     # if patient insurance is tamin 
     # ****
     # if patient insurance is salamat
 
-    # get drugs from database
-    DrugQuery_ResponseModel = [{
-        'id' : '4234234' ,
-        'name' : 'estaminofin',
-        'favorit' : [{
-            'drugInst' : '1' ,
-            'drugAmnt' : '2',
-            'numberOfDrug' : '3'
-        }]  
-    }]
-    
+    # get drugs from database 
+    DrugQuery_ResponseModel = {
+        'data': [
+            {
+                'id' : '4234234' ,
+                'name' : 'estaminofin',
+                'favorit' : [
+                    {
+                        'drugInstName' : 'یک بار در روز' ,
+                        'drugInstId' : '69' ,
+                        'drugAmntName' : 'یک واحد',
+                        'drugAmntId' : '23',
+                        'numberOfRequest' : 1
+                    }
+                ]  
+            }
+        ]
+    } 
+
     return DrugQuery_ResponseModel
-
-
-@router.get("/drug-amnt" ,response_model= List[DrugAmntQuery_ResponseModel]) 
-async def drug_amnt_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60)):
     
-    resp = [
-        {'id':'2354564' ,'name': 'دو قاشق غذاخوری'}
-    ]
-    return resp
 
-
-@router.get("/drug-instr" ,response_model= List[DrugInstrQuery_ResponseModel]) 
-async def drug_instr_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60)):
-
-    resp = [
-        {'id':'3452342' ,'name': 'یک روز درمیان'}
-    ]
-    return resp 
-
-
-@router.get("/experimentation" ,response_model= ExperimentationQuery_ResponseModel) 
-async def experimentation_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60),
-                    clause : str = Query(None, min_length=1, max_length=60)):
+@router.get("/drug-amnt" ,response_model= DrugAmntQuery_ResponseModel) 
+async def drug_amnt_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                        doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')):
     
-    ls_clause = await redis._zscan('GlobalDrug')
-    return ls_clause
+    DrugAmntQuery_ResponseModel = { 'data': [ 
+        {'id':'465468' ,'name': 'یک واحد'}
+    ]}
+    return DrugAmntQuery_ResponseModel
 
-@router.get("/physiotherapy" ,response_model= PhysiotherapyQuery_ResponseModel) 
-async def physiotherapy_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60),
-                    clause : str = Query(None, min_length=1, max_length=60)):
+
+@router.get("/drug-inst" ,response_model= DrugInstQuery_ResponseModel) 
+async def drug_instr_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                        doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')):
+
+    DrugInstQuery_ResponseModel = {'data': [
+        {'id':'3452342' ,'name': 'یک بار در روز'}
+    ]}
+    return DrugInstQuery_ResponseModel 
+
+
+@router.get("/exper" ,response_model= ExperimentationQuery_ResponseModel) 
+async def experimentation_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                    doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
+                    clause : str = Query(None, min_length=1, max_length=60 ,example= 'اندازه')):
     
-    ls_clause = await redis._zscan('GlobalDrug' )
-    return ls_clause
+
+    ExperimentationQuery_ResponseModel = {
+        'data': [
+            {
+                'id' : '3453662' ,
+                'name' : 'اندازه گيري کمّي نوراپي نفرين در خون/سرم/پلاسما',
+                'favorit' : [
+                    {
+                        'numberOfRequest' : 1
+                    }
+                ]  
+            }
+        ]
+    } 
+
+    return ExperimentationQuery_ResponseModel
+
+
+@router.get("/physio" ,response_model= PhysiotherapyQuery_ResponseModel) 
+async def physiotherapy_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                    doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
+                    clause : str = Query(None, min_length=1, max_length=60 ,example= 'کف پا')):
+    
+    PhysiotherapyQuery_ResponseModel = {
+        'data': [
+            {
+                'id' : '4352234' ,
+                'name' : 'اندازه گيري کمّي نوراپي نفرين در خون/سرم/پلاسما',
+                'favorit' : [
+                    {
+                        'numberOfRequest' : 1
+                    }
+                ]  
+            }
+        ]
+    } 
+
+    return PhysiotherapyQuery_ResponseModel
+
 
 @router.get("/imaging" ,response_model= ImagingQuery_ResponseModel) 
-async def imaging_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60),
-                    clause : str = Query(None, min_length=1, max_length=60)):
+async def imaging_query(atientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                    doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
+                    clause : str = Query(None, min_length=1, max_length=60 ,example= 'ساق پا')):
     
-    ls_clause = await redis._zscan('GlobalDrug')
-    return ls_clause
+    ImagingQuery_ResponseModel = {
+        'data': [
+            {
+                'id' : '798454' ,
+                'name' : 'سي تي اسکن ساق پا چپ بدون کنتراست',
+                'favorit' : [
+                    {
+                        'numberOfRequest' : 1
+                    }
+                ]  
+            }
+        ]
+    } 
+
+    return ImagingQuery_ResponseModel
 
 @router.get("/service" ,response_model= DocServiceQuery_ResponseModel) 
-async def service_query(patientId : str =  Query(None, min_length=3, max_length=60) ,
-                    doctorId : str = Query(None, min_length=3, max_length=60),
-                    clause : str = Query(None, min_length=1, max_length=60)):
+async def service_query(atientId : str =  Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
+                    doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
+                    clause : str = Query(None, min_length=1, max_length=60 ,example= 'پوستچروگرا')):
     
-    ls_clause = await redis._zscan('GlobalDrug')
-    return ls_clause
+    DocServiceQuery_ResponseModel = {
+        'data': [
+            {
+                'id' : '521692' ,
+                'name' : 'پوستچروگرافي ديناميک کامپيوتري (صندلي چرخان)',
+                'favorit' : [
+                    {
+                        'numberOfRequest' : 1
+                    }
+                ]  
+            }
+        ]
+    } 
 
-
-
-# @router.get("/check" ,response_model= List[CheckDrug_ResponseModel]) 
-# async def drug_instr_query(clause: CheckDrugModel= Body(... ,examples= Examples.check_drugs)):
-
-#     ls_clause = await redis._zscan('GlobalDrugInstr' , clause)
-#     return ls_clause 
+    return DocServiceQuery_ResponseModel
 
 
