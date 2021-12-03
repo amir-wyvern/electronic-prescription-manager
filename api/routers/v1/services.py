@@ -12,53 +12,6 @@ router = APIRouter(
     )
 
 
-class drugQueryModel(BaseModel):
-
-    patientId  : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId   : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )
-
-
-class drugAmntQueryModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-
-
-class drugInstrQueryModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )
-
-class PhysiotherapyModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
-
-class ImagingModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
-
-
-class ServiceModel(BaseModel):
-
-    patientId : str = Field(... ,min_length=1 ,max_length=30 )
-    doctorId  : str = Field(... ,min_length=1 ,max_length=30 )
-    clause     : str = Field(... ,max_length=150 )    
-
-
-class ServiceType(BaseModel):
-
-    srvType      : str = Field(... ,example= '01')
-    srvTypeDes   : str = Field(... ,example= 'دارویی')
-    status       : str = Field(... ,example= '1')
-    statusstDate : str = Field(... ,example= '13940101')
-    custType     : str = Field(... ,example= '3')
-
 # ===== Drug =====
 class DrugFavoritModel(BaseModel):
 
@@ -126,6 +79,7 @@ class DocServiceQuery_ResponseModel(BaseModel):
 
     data : List[DocServiceModel]
 
+
 # ===== Experimentation =====
 class ExperFavoritModel(BaseModel):
 
@@ -140,6 +94,28 @@ class ExperModel(BaseModel):
 class ExperimentationQuery_ResponseModel(BaseModel):
 
     data : List[ExperModel]
+
+
+# ===== Drug Amount =====
+class DrugAmntModel(BaseModel):
+    
+    id : str = Field(... ,example= '465468')
+    name : str = Field(... ,example= 'یک واحد')
+
+class DrugAmntQuery_ResponseModel(BaseModel):
+
+    drugAmnt : List[DrugAmntModel]
+
+
+# ===== Drug Instruction =====
+class DrugInstModel(BaseModel):
+
+    id   : str = Field(... ,example= '3452342')
+    name : str = Field(... ,example= 'یک بار در روز')
+
+class DrugInstQuery_ResponseModel(BaseModel):
+   
+   drugInst : List[DrugInstModel]
 
 
 class ItemCheckDrug(BaseModel):
@@ -159,25 +135,6 @@ class CheckDrug_ResponseModel(BaseModel):
     exceptionType : str = Field(... ,example= 'error')
     exceptionMsg  : List = Field(... ,example= ['تداخل دارویی وجود درد']) 
 
-
-class DrugAmntModel(BaseModel):
-    
-    id : str = Field(... ,example= '465468')
-    name : str = Field(... ,example= 'یک واحد')
-
-class DrugAmntQuery_ResponseModel(BaseModel):
-
-    drugAmnt : List[DrugAmntModel]
-
-    
-class DrugInstModel(BaseModel):
-
-    id   : str = Field(... ,example= '3452342')
-    name : str = Field(... ,example= 'یک بار در روز')
-
-class DrugInstQuery_ResponseModel(BaseModel):
-   
-   drugInst : List[DrugInstModel]
 
 
 class Examples:
