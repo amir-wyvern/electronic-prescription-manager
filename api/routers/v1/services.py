@@ -13,19 +13,20 @@ router = APIRouter(
 
 
 # ===== Drug =====
-class DrugFavoritModel(BaseModel):
-
-    drugAmntName : Optional[str] = Field(... ,example= 'یک واحد')
-    drugAmntId : Optional[str] = Field(... ,example= '23')
-    drugInstName : Optional[str] = Field(... ,example= 'یک بار در روز')
-    drugInstId : Optional[str] = Field(... ,example= '69')
-    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class DrugModel(BaseModel):
 
+    class FavoritModel(BaseModel):
+
+        drugAmntName : Optional[str] = Field(... ,example= 'یک واحد')
+        drugAmntId : Optional[str] = Field(... ,example= '23')
+        drugInstName : Optional[str] = Field(... ,example= 'یک بار در روز')
+        drugInstId : Optional[str] = Field(... ,example= '69')
+        numberOfRequest : Optional[int] = Field(... ,example= 1)
+
     id      : str = Field(... ,example= '8786522')
     name    : str = Field(... ,example= 'ANTI-D‬‬ ‫‪IMMUNOGLOBULIN‬‬ ‫‪INJECTION‬‬ INTRAMUSCULAR‬‬‫‪') 
-    favorit :   Optional[List[DrugFavoritModel]]
+    favorit :   Optional[List[FavoritModel]]
 
 class DrugQuery_ResponseModel(BaseModel):
 
@@ -33,15 +34,16 @@ class DrugQuery_ResponseModel(BaseModel):
 
 
 # ===== Physiotherapy =====
-class PhysioFavoritModel(BaseModel):
-
-    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class PhysioModel(BaseModel):
 
+    class FavoritModel(BaseModel):
+
+        numberOfRequest : Optional[int] = Field(... ,example= 1)
+
     id      : str = Field(... ,example= '4352234')
     name    : str = Field(... ,example= 'اسکن استاتيک کف پا (Foot Scan) براي تعيين نقاط فشاري کف پا و تجويز کفي و يا اورتز مناسب')
-    favorit : Optional[List[PhysioFavoritModel]] 
+    favorit : Optional[List[FavoritModel]] 
 
 class PhysiotherapyQuery_ResponseModel(BaseModel):
 
@@ -49,15 +51,16 @@ class PhysiotherapyQuery_ResponseModel(BaseModel):
 
 
 # ===== Imaging =====
-class ImagingFavoritModel(BaseModel):
-
-    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class ImagingModel(BaseModel):
 
+    class FavoritModel(BaseModel):
+
+        numberOfRequest : Optional[int] = Field(... ,example= 1)
+
     id      : str = Field(... ,example= '798454')
     name    : str = Field(... ,example= 'سي تي اسکن ساق پا چپ بدون کنتراست') 
-    favorit : Optional[List[ImagingFavoritModel]] 
+    favorit : Optional[List[FavoritModel]] 
 
 class ImagingQuery_ResponseModel(BaseModel):
 
@@ -65,15 +68,16 @@ class ImagingQuery_ResponseModel(BaseModel):
 
 
 # ===== Doctor Service =====
-class DocServiceFavoritModel(BaseModel):
-
-    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class DocServiceModel(BaseModel):
 
+    class FavoritModel(BaseModel):
+
+        numberOfRequest : Optional[int] = Field(... ,example= 1)
+
     id  : str = Field(... ,example= '521692')
     name    : str = Field(... ,example= 'پوستچروگرافي ديناميک کامپيوتري (صندلي چرخان)')
-    favorit : Optional[List[DocServiceFavoritModel]] 
+    favorit : Optional[List[FavoritModel]] 
     
 class DocServiceQuery_ResponseModel(BaseModel):
 
@@ -81,15 +85,16 @@ class DocServiceQuery_ResponseModel(BaseModel):
 
 
 # ===== Experimentation =====
-class ExperFavoritModel(BaseModel):
-
-    numberOfRequest : Optional[int] = Field(... ,example= 1)
 
 class ExperModel(BaseModel):
 
+    class FavoritModel(BaseModel):
+
+        numberOfRequest : Optional[int] = Field(... ,example= 1)
+
     id      : str = Field(... ,example= '3453662') 
     name    : str = Field(... ,example= 'اندازه گيري کمّي نوراپي نفرين در خون/سرم/پلاسما') 
-    favorit : Optional[List[ExperFavoritModel]] 
+    favorit : Optional[List[FavoritModel]] 
 
 class ExperimentationQuery_ResponseModel(BaseModel):
 
@@ -374,6 +379,7 @@ async def imaging_query(atientId : str = Query(None, min_length=3, max_length=60
     } 
 
     return ImagingQuery_ResponseModel
+
 
 @router.get("/service" ,response_model= DocServiceQuery_ResponseModel) 
 async def service_query(atientId : str =  Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
