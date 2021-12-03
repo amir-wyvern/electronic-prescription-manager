@@ -8,47 +8,108 @@ router = APIRouter(
     tags=["Prescription"]
     )
 
-class DrugsModel(BaseModel):
+# ===== Drug =====
+class DrugDetailModel(BaseModel):
 
-    id     : str 
-    drugAmnt : str
-    drugQty  : str
-    number   : str
-    description : str
+    drugAmntId      : str
+    drugInstId      : str
+    numberOfRequest :str
 
-
-class ExperimentationModel(BaseModel):
+class DrugPrescModel(BaseModel):
     
-    id        : str
-    number      : str
-    description : str
+    doctorId      : str
+    patientId     : str
+  
+    serviceId     : str 
+    description   : str
+    ServiceDetail : DrugDetailModel
+
+    otherServices : List
+
+
+# ===== Experimentation =====
+class ExperDetailModel(BaseModel):
+
+    numberOfRequest :str
+
+class ExperModel(BaseModel):
+
+    doctorId      : str
+    patientId     : str
+  
+    serviceId     : str 
+    description   : str
+    ServiceDetail : ExperDetailModel
+
+    otherServices : List
+
+
+# ===== Imaging =====
+class ImageingDetailModel(BaseModel):
+
+    numberOfRequest :str
 
 class ImageingModel(BaseModel):
 
-    id   : str
-    number : str
-    description : str
+    doctorId      : str
+    patientId     : str
+  
+    serviceId     : str 
+    description   : str
+    ServiceDetail : ImageingDetailModel
 
+    otherServices : List
+
+
+# ===== Service =====
+class ServicesDetailModel(BaseModel):
+
+    numberOfRequest :str
 
 class ServicesModel(BaseModel):
 
-    id   : str
-    number : str
-    description : str
-    
+    doctorId      : str
+    patientId     : str
+  
+    serviceId     : str 
+    description   : str
+    ServiceDetail : ServicesDetailModel
 
-class PhysiotherapyModel(BaseModel):
+    otherServices : List
 
-    id     : str
-    number : str
-    description : str
 
+# ===== Physiotherapy =====
+class PhysioDetailModel(BaseModel):
+
+    numberOfRequest :str
+
+class PhysioModel(BaseModel):
+
+    doctorId      : str
+    patientId     : str
+  
+    serviceId     : str 
+    description   : str
+    ServiceDetail : PhysioDetailModel
+
+    otherServices : List
+
+
+# ===== Reference =====
+class ReferenceDetailModel(BaseModel):
+
+    numberOfRequest :str
 
 class ReferenceModel(BaseModel):
 
-    id     : str
-    number : str
-    description : str
+    doctorId      : str
+    patientId     : str
+  
+    serviceId     : str 
+    description   : str
+    ServiceDetail : ReferenceDetailModel
+
+    otherServices : List
 
 
 class PrescriptionModel(BaseModel):
@@ -59,28 +120,12 @@ class PrescriptionModel(BaseModel):
     drugs           : List[DrugsModel]
     services        : List[ServicesModel]
     # reference       : List[ReferenceModel]
-
-
+ 
 class PrescriptionRequestModel(BaseModel):
     
     patientId     : str  = Field(...)
     doctorId      : str  = Field(...)
     prescription  : PrescriptionModel
-
-class DrugDetailModel(BaseModel):
-
-    drugAmnt : str
-    drugInnst : str
-    numberOfDrug :str
-
-class DrugPrescModel(BaseModel):
-    
-    doctorId : str
-    patientId : str
-
-    drugId :str 
-    description : str
-    detailDrug : DrugDetailModel
 
 
 @router.post("/drug" ) 
@@ -88,19 +133,19 @@ async def drug_prescription(item: DrugPrescModel= Body(...)):
     return item
 
 @router.post("/exper" ,response_model= DrugPrescModel) 
-async def experimentation_prescription(item: PrescriptionRequestModel= Body(...)):
+async def experimentation_prescription(item: ExperModel= Body(...)):
     return item
 
 @router.post("/physio" ,response_model= DrugPrescModel) 
-async def physiotherapy_prescription(item: PrescriptionRequestModel= Body(...)):
+async def physiotherapy_prescription(item: PhysioModel= Body(...)):
     return item
 
-@router.post("/imaging" ,response_model= DrugPrescModel) 
-async def imaging_prescription(item: PrescriptionRequestModel= Body(...)):
+@router.post("/imaging" ,response_model= ImageingModel) 
+async def imaging_prescription(item: ImageingModel= Body(...)):
     return item
 
 @router.post("/service" ,response_model= DrugPrescModel) 
-async def service_prescription(item: PrescriptionRequestModel= Body(...)):
+async def service_prescription(item: ServicesModel= Body(...)):
     return item
 
 # @router.post("/refrence" ,response_model= DrugPrescModel) 
