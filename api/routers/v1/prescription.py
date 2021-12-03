@@ -3,122 +3,137 @@ from pydantic import BaseModel ,Field
 from typing import List, Optional
 
 
+
 router = APIRouter(
     prefix="/v1/presc",
     tags=["Prescription"]
     )
 
+class BaseDocModel(BaseModel):
+    
+    doctorId : str
+    patientId: str
+
 # ===== Drug =====
-class DrugDetailModel(BaseModel):
+class DrugSrvcModel(BaseModel):
 
-    drugAmntId      : str
-    drugInstId      : str
-    numberOfRequest :str
+    class DetailModel(BaseModel):
 
-class DrugPrescModel(BaseModel):
+        drugAmntId      : str
+        drugInstId      : str
+        numberOfRequest :str
+        description   : str
+
+    serviceId     : str 
+    serviceDetail : DetailModel
+
+class DrugPrescModel(DrugSrvcModel):
     
     doctorId      : str
     patientId     : str
-  
-    serviceId     : str 
-    description   : str
-    ServiceDetail : DrugDetailModel
-
     otherServices : List
 
 
 # ===== Experimentation =====
-class ExperDetailModel(BaseModel):
 
-    numberOfRequest :str
+class ExperSrvcModel(BaseModel):
 
-class ExperModel(BaseModel):
+    class DetailModel(BaseModel):
+
+        numberOfRequest :str
+        description   : str
+
+    serviceId     : str 
+    serviceDetail : DetailModel
+
+class ExperModel(ExperSrvcModel):
 
     doctorId      : str
     patientId     : str
-  
-    serviceId     : str 
-    description   : str
-    ServiceDetail : ExperDetailModel
-
     otherServices : List
 
 
 # ===== Imaging =====
-class ImageingDetailModel(BaseModel):
+class ImagingSrvcModel(BaseModel):
 
-    numberOfRequest :str
+    class DetailModel(BaseModel):
 
-class ImageingModel(BaseModel):
+        numberOfRequest :str
+        description   : str
+
+    serviceId     : str 
+    serviceDetail : DetailModel
+
+class ImageingModel(ImagingSrvcModel):
 
     doctorId      : str
     patientId     : str
-  
-    serviceId     : str 
-    description   : str
-    ServiceDetail : ImageingDetailModel
-
     otherServices : List
 
 
 # ===== Service =====
-class ServicesDetailModel(BaseModel):
+class ServicesSrvcModel(BaseModel):
 
-    numberOfRequest :str
+    class DetailModel(BaseModel):
 
-class ServicesModel(BaseModel):
+        numberOfRequest :str
+        description   : str
+
+    serviceId     : str 
+    serviceDetail : DetailModel
+
+class ServicesModel(ServicesSrvcModel):
 
     doctorId      : str
     patientId     : str
-  
-    serviceId     : str 
-    description   : str
-    ServiceDetail : ServicesDetailModel
-
     otherServices : List
 
 
 # ===== Physiotherapy =====
-class PhysioDetailModel(BaseModel):
 
-    numberOfRequest :str
+class PhysioSrvcModel(BaseModel):
 
-class PhysioModel(BaseModel):
+    class DetailModel(BaseModel):
+
+        numberOfRequest :str
+        description   : str
+
+    serviceId     : str 
+    serviceDetail : DetailModel
+
+class PhysioModel(PhysioSrvcModel):
 
     doctorId      : str
     patientId     : str
-  
-    serviceId     : str 
-    description   : str
-    ServiceDetail : PhysioDetailModel
-
     otherServices : List
 
 
 # ===== Reference =====
-class ReferenceDetailModel(BaseModel):
 
-    numberOfRequest :str
+class ReferenceSrvcModel(BaseModel):
 
-class ReferenceModel(BaseModel):
+    class DetailModel(BaseModel):
+
+        numberOfRequest :str
+        description   : str
+
+    serviceId     : str 
+    serviceDetail : DetailModel
+
+class ReferenceModel(ReferenceSrvcModel):
 
     doctorId      : str
     patientId     : str
-  
-    serviceId     : str 
-    description   : str
-    ServiceDetail : ReferenceDetailModel
-
     otherServices : List
 
 
 class PrescriptionModel(BaseModel):
     
-    experimentation : List[ExperimentationModel]
-    physiotherapy   : List[PhysiotherapyModel]
-    imaging         : List[ImageingModel]
-    drugs           : List[DrugsModel]
-    services        : List[ServicesModel]
+    experimentation : List#[ExperimentationModel]
+    physiotherapy   : List#[PhysiotherapyModel]
+    imaging         : List#[ImageingModel]
+    drugs           : List#[DrugsModel]
+    services        : List#[ServicesModel]
     # reference       : List[ReferenceModel]
  
 class PrescriptionRequestModel(BaseModel):
@@ -128,56 +143,118 @@ class PrescriptionRequestModel(BaseModel):
     prescription  : PrescriptionModel
 
 
-@router.post("/drug" ) 
+class TotalPrescModel(BaseDocModel):
+
+    class DetailModel(BaseModel):
+
+        drug    : Optional[List[DrugSrvcModel]] 
+        exper   : Optional[List[ExperSrvcModel]] 
+        physio  : Optional[List[PhysioSrvcModel]] 
+        imaging : Optional[List[ImagingSrvcModel]] 
+        service : Optional[List[ServicesSrvcModel]] 
+
+    presc : DetailModel
+
+
+class CheckService_ResponseModel(BaseModel):
+
+    class WarningModel(BaseModel):
+        
+        serviceId : str
+        message   : str
+
+    class ErrorModel(BaseModel):
+        
+        serviceId : str
+        message   : str
+
+    resultCode : str
+    warnings : List[WarningModel]
+    errors : List[ErrorModel]
+
+
+class TotalPresc_ResponseModel(CheckService_ResponseModel):
+
+    class PrescCodesList(BaseModel):
+
+        prescNumber : str
+        prescCode: str
+
+    prescCodes : List[PrescCodesList]
+
+
+@router.post("/drug" ,response_model= CheckService_ResponseModel) 
 async def drug_prescription(item: DrugPrescModel= Body(...)):
-    return item
+    return CheckService_ResponseModel
 
-@router.post("/exper" ,response_model= DrugPrescModel) 
+
+@router.post("/exper" ,response_model= CheckService_ResponseModel) 
 async def experimentation_prescription(item: ExperModel= Body(...)):
-    return item
+    return CheckService_ResponseModel
 
-@router.post("/physio" ,response_model= DrugPrescModel) 
+
+@router.post("/physio" ,response_model= CheckService_ResponseModel) 
 async def physiotherapy_prescription(item: PhysioModel= Body(...)):
-    return item
+    return CheckService_ResponseModel
 
-@router.post("/imaging" ,response_model= ImageingModel) 
+
+@router.post("/imaging" ,response_model= CheckService_ResponseModel) 
 async def imaging_prescription(item: ImageingModel= Body(...)):
-    return item
+    return CheckService_ResponseModel
 
-@router.post("/service" ,response_model= DrugPrescModel) 
+
+@router.post("/service" ,response_model= CheckService_ResponseModel) 
 async def service_prescription(item: ServicesModel= Body(...)):
-    return item
+    return CheckService_ResponseModel
+
 
 # @router.post("/refrence" ,response_model= DrugPrescModel) 
 # async def refrence_prescription(item: PrescriptionRequestModel= Body(...)):
 #     return item
 
-@router.post("/submit" ,response_model= DrugPrescModel) 
-async def save_prescription(item: PrescriptionRequestModel= Body(...)):
-    return item
+
+@router.post("/submit" ,response_model= TotalPresc_ResponseModel) 
+async def save_prescription(item: TotalPrescModel= Body(...)):
+    return TotalPresc_ResponseModel
 
 
-class PrescriptionDeleteModel(BaseModel):
-
-    prescId : str
-    doctorId : str
-
-class PrescriptionDeleteModel(BaseModel):
+class PrescDeleteModel(BaseModel):
 
     prescId : str
     doctorId : str
-    prescription : PrescriptionModel
 
-@router.delete("/delete" ) 
-async def delete_prescription(item: PrescriptionDeleteModel= Body(...)):
+class PrescDelete_ResponseModel(BaseModel):
+    
+    message : str
+
+
+class PrescUpdateModel(TotalPrescModel):
+
+    prescId : str
+
+class PrescUpdate_ResponseModel(BaseModel):
+    pass
+
+class PrescDetailModel(BaseModel):
+
+    doctorId : str
+    prescId : str
+
+class PrescDetail_ResponseModel(BaseModel):
+    
+    pass
+
+
+@router.delete("/delete" ,response_model= PrescDelete_ResponseModel) 
+async def delete_prescription(item: PrescDeleteModel= Body(...)):
     return item
 
-@router.put("/update" ) 
-async def update_prescription(item: PrescriptionRequestModel= Body(...)):
+@router.put("/update" ,response_model= TotalPresc_ResponseModel) 
+async def update_prescription(item: PrescUpdateModel= Body(...)):
     return item
 
-@router.get("/detail" ) 
-async def detail_prescription(item: PrescriptionRequestModel= Body(...)):
+@router.get("/detail") 
+async def detail_prescription(item: PrescDetailModel= Body(...)):
     return item
 
 
