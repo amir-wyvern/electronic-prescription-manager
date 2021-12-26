@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel ,Field
 from uuid import uuid4
 from typing import Union
+from models.PATIENT_MODEL import Patient as PatientModel
 
 from async_redis.redis_obj import redis
 from insuranceAPI.insurance_handler import Pateint
@@ -21,8 +22,6 @@ def checkNationalNumber(nationalNumber : str) -> bool:
     """
 
     sum = 0
-    print('------------------')
-    print(nationalNumber)
     checkNumber = int(nationalNumber[-1])
     otherNumbers = nationalNumber[:-1]
 
@@ -50,13 +49,13 @@ class FetchNationalNumber(BaseModel):
 class SaveNumberPhone(BaseModel):
 
     doctorId    : str = Field(... ,max_length=100 ,min_length=1 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') 
-    pateintId   : str = Field(... ,max_length=100 ,min_length=2 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
+    patientId   : str = Field(... ,max_length=100 ,min_length=2 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
     numberPhone : str = Field(... ,max_length=11 ,min_length=11 ,example= '09150123456')
 
 
 class PatientInfo(BaseModel):
     
-    patienId     : str = Field(... ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
+    patientId     : str = Field(... ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb')
     firstName    : str = Field(... ,example= 'امیر')
     lastName     : str = Field(... ,example= 'حدادیان')
     fullName     : str = Field(... ,example= 'امیر حدادیان')
@@ -90,7 +89,7 @@ class ErrorModel(BaseModel):
 async def save_patient_numberPhone(model: SaveNumberPhone= Body(...)):
     
     # ===== save in redis and check the phone number so that it is not duplicated in the database =======
-    pass
+    await PatientModel(patientId= model.patientId).edit(numberPhone= model.numberPhone)
     # ===========================
 
     return JSONResponse(
@@ -112,6 +111,7 @@ async def fetch_patient_info(doctorID: str = Query(
             content= jsonable_encoder({"detail": 'This national number is not valid'}),
             )
 
+    resultPatient = await PatientModel().find(nationalNumber= nationalNumber)
     # ====== Check the existence of a national number in the sabteahval system ======
     pass
     # ===============================================================================
@@ -126,16 +126,29 @@ async def fetch_patient_info(doctorID: str = Query(
     pass
     # =================================================================================================
 
-    PatientInfo = {
-    'patienId'     : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
-    'firstName'    : 'امیر',
-    'lastName'     : 'حدادیان',
-    'fullName'     : 'امیر حدادیان',
-    'numberPhone'  : '09151234567',
-    'birthDate'    : '1636299942',
-    'insurance'    : 'سلامت',
-    'subInsurance' : 'روستاییان',
-    'exDate'       : '1786299942'}
+    result = {}
+    if resultPatient:
 
-    return PatientInfo
-    
+        for key ,value in resultPatient[0].items():
+            result[key] = value
+        
+        return result
+
+
+    else:
+        return JSONResponse(
+            status_code= status.HTTP_404_NOT_FOUND,
+            content= jsonable_encoder({"detail": 'No information is available for this national number'}),
+            )
+
+
+    # PatientInfo = {
+    # 'patienId'     : 'bba18866-5bd8-4264-9e0d-4d91190688bb',
+    # 'firstName'    : 'امیر',
+    # 'lastName'     : 'حدادیان',
+    # 'fullName'     : 'امیر حدادیان',
+    # 'numberPhone'  : '09151234567',
+    # 'birthDate'    : '1636299942',
+    # 'insurance'    : 'سلامت',
+    # 'subInsurance' : 'روستاییان',
+    # 'exDate'       : '1786299942'}
