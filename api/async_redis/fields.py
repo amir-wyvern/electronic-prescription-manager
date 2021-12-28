@@ -11,9 +11,9 @@ class StringField(object):
 
     def __init__(self ,indexable= False):
 
-        # self.__instr__ = 
         self.__indexable__ = indexable
         self.__lsfuncs__   = ['save' ,'getItem' ,'search']
+        
     def __str__(self):
         return '<%s:%s>' % (self.__class__.__name__)
 
