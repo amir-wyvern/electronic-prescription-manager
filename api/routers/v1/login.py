@@ -7,7 +7,7 @@ import hashlib
 from uuid import uuid4
 
 from models.DOCTOR_MODEL import NobanDoctor
-from insuranceAPI.insurance_handler import Doctor
+# from insuranceAPI.insurance_handler import Doctor
 
 router = APIRouter(
     prefix='/v1/login',
@@ -109,7 +109,7 @@ async def login(user: UserLoginModel = Body(... ,examples= Examples.user_login_m
                 content= jsonable_encoder({"detail": 'Username or password is incorrect!'}),
                 )
 
-        session = Doctor().getSession(username= user.username ,password= user.password)
+        # session = Doctor().getSession(username= user.username ,password= user.password)
 
         return salamatDetail
 
