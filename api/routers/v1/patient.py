@@ -7,7 +7,6 @@ from typing import Union
 from models.PATIENT_MODEL import Patient as PatientModel
 
 from async_redis.redis_obj import redis
-from insuranceAPI.insurance_handler import Pateint
 
 router = APIRouter(
     prefix="/v1/patient",
