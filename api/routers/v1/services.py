@@ -2,9 +2,13 @@ from os import name
 from typing import Dict, List, Optional
 from fastapi import APIRouter ,Body ,Query
 from pydantic import BaseModel ,Field
+from api.models.SERVICE_MODEL import TaminDrugs 
+from api.models.FAVORIT_MODEL import FavoritDrug
 
 from async_redis.redis_obj import redis
 import logging
+
+from insuranceAPI.insurance_handler import TaminHandler
 
 router = APIRouter(
     prefix="/v1/srvc",
@@ -272,53 +276,57 @@ async def drug_query(patientId : str = Query(None, min_length=3, max_length=60 ,
     # ****
     # if patient insurance is salamat
 
-    # get drugs from database 
-    DrugQuery_ResponseModel = {
-        'data': [
-            {
-                'id' : '4234234' ,
-                'name' : 'estaminofin',
-                'favorit' : [
-                    {
-                        'drugInstName' : 'یک بار در روز' ,
-                        'drugInstId' : '69' ,
-                        'drugAmntName' : 'یک واحد',
-                        'drugAmntId' : '23',
-                        'numberOfRequest' : 1
-                    }
-                ]  
-            }
-        ]
-    } 
+    resSearch = await TaminHandler().getDrugs(clause)
+    resFav = await FavoritDrug(doctorId= doctorId).getFavorit((5,))
+    lsDrugs = []
+    for name ,_id in resSearch :
+        lsDrugs.append({
+            'id' : _id,
+                'name' : name,
+                'favorit' : resFav
+                #  [
+                    # {
+                    #     'drugInstName' : 'یک بار در روز' ,
+                    #     'drugInstId' : '69' ,
+                    #     'drugAmntName' : 'یک واحد',
+                    #     'drugAmntId' : '23',
+                    #     'numberOfRequest' : 1
+                    # }
+                # ]
+        })
 
-    return DrugQuery_ResponseModel
+    resp = {
+        'data' : lsDrugs
+    }
+    return resp
     
 
 @router.get("/drug-amnt" ,response_model= DrugAmntQuery_ResponseModel) 
 async def drug_amnt_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
                         doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')):
     
-    DrugAmntQuery_ResponseModel = { 'data': [ 
-        {'id':'465468' ,'name': 'یک واحد'}
-    ]}
-    return DrugAmntQuery_ResponseModel
+    resSearch = await TaminHandler().getDrugAmnt()
+    resp = {
+        'drugAmnt': resSearch
+    }
+    return resp
 
 
 @router.get("/drug-inst" ,response_model= DrugInstQuery_ResponseModel) 
 async def drug_instr_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
                         doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474')):
 
-    DrugInstQuery_ResponseModel = {'data': [
-        {'id':'3452342' ,'name': 'یک بار در روز'}
-    ]}
-    return DrugInstQuery_ResponseModel 
+    resSearch = await TaminHandler().getDrugInst()
+    resp = {
+        'drugInst': resSearch
+    }
+    return resp
 
 
 @router.get("/exper" ,response_model= ExperimentationQuery_ResponseModel) 
 async def experimentation_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
                     doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
                     clause : str = Query(None, min_length=1, max_length=60 ,example= 'اندازه')):
-    
 
     ExperimentationQuery_ResponseModel = {
         'data': [
