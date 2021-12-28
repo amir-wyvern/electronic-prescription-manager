@@ -1,8 +1,202 @@
+from pydantic.fields import T
 from async_redis.redis_obj import redis
 
-from models.DOCTOR_MODEL import DoctorSession
 import aiohttp
 import asyncio 
+
+import json
+
+from models.SERVICE_MODEL import TaminDrugs ,TaminDrugAmnt
+
+class TaminUrls:
+    
+    TAMIN_TEST = 'https://ep-test.tamin.ir/api/'
+    TAMIN_MAIN   = 'http://soa.tamin.ir/interface/epresc/' 
+
+    TAMIN = TAMIN_TEST
+
+    TAMIN_SERVICES = { 
+        'drug' : '1',
+        'exper' : '2', # experimentation
+        'radiology' : '3',
+        'sono' : '4', # sonography
+        'speech' : '10' , # speechTherapy
+        'ctScan' : '5',
+        'mri' : '6',
+        'nuclearMedicine' : '7', 
+        'radiotherapy' : '8',
+        'audiometry' : '9',
+        'angiography' : '11',
+        'comServces' : '12' ,# Services complementary to diagnostic measures
+        'physiotherapy' : '13',
+        'boneDensitometry' :'14',
+        'dialysis' : '15',
+        'visit' : '16',
+        'AncillaryServices' : '17'
+    }
+
+    TAMIN_SERVICE_DRUG      = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['drug']
+    TAMIN_SERVICE_EXPER     = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['exper']
+    TAMIN_SERVICE_RADIOLOGY = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['radiology']
+    TAMIN_SERVICE_SP        = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['speech']
+    TAMIN_SERVICE_CT        = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['ctScan']
+    TAMIN_SERVICE_MRI       = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['mri']
+    TAMIN_SERVICE_NMEDICINE = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['nuclearMedicine']
+    TAMIN_SERVICE_RADIOTH   = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['radiotherapy']
+    TAMIN_SERVICE_AUDIOTH   = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['audiometry']
+    TAMIN_SERVICE_ANGIOTH   = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['angiography']
+    TAMIN_SERVICE_COMSRVC   = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['comServces']
+    TAMIN_SERVICE_PHTH      = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['physiotherapy']
+    TAMIN_SERVICE_BONEDE    = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['boneDensitometry']
+    TAMIN_SERVICE_DIALYSIS  = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['dialysis']
+    TAMIN_SERVICE_VISIT     = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['visit']
+    TAMIN_SERVICE_ANSRVC    = TAMIN + 'ws-services?serviceType=' + TAMIN_SERVICES['AncillaryServices']
+
+    TAMIN_DRUG_AMNT         = TAMIN + 'ws-drug-amount'
+    TAMIN_DRUG_INST         = TAMIN + 'ws-drug-instruction'
+
+class TaminHandler(TaminUrls):
+
+    async def getDrugs(self ,clause):
+
+        resp = await TaminDrugs().getItem(({'srvCode': '0000090011'},))
+        if not resp:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(self.TAMIN_SERVICE_DRUG) as response:
+                    data = await response.json()
+
+                    
+                    # print("Body:", data['data']['list'][:2], "...")
+
+            # srvCode     = PkFieldHash() 
+            # srvName     = StringFieldHash(indexable=True)
+            # srvType     = StringFieldHash()
+            # srvTypeDes  = StringFieldHash()
+            # status      = StringFieldHash()
+            # srvBimSw    = StringFieldHash() 
+            # gSrvCode    = StringFieldHash()
+            # wsSrvCode   = StringFieldHash(indexable=True)
+            # parTarefGrp = StringFieldHash()
+
+            for item in data['data']['list']:
+                name = ''
+                if item['srvName']:
+                    name = str(item['srvName'])
+
+                srvType = ''
+                if item['srvType']['srvType']:
+                    srvType = str(item['srvType']['srvType'])
+
+                srvTypeDes = ''
+                if item['srvType']['srvTypeDes']:
+                    srvTypeDes = str(item['srvType']['srvTypeDes'])
+
+                status = ''
+                if item['srvType']['status'] :
+                    status = str(item['srvType']['status'])
+
+                srvBimSw = ''
+                if item['srvBimSw'] :
+                    srvBimSw = str(item['srvBimSw'])
+                
+                gSrvCode = ''
+                if item['gSrvCode']:
+                    gSrvCode= item['gSrvCode']
+
+                wsSrvCode = ''
+                if item['wsSrvCode']:
+                    wsSrvCode= item['wsSrvCode']
+
+                parTarefGrp = ''
+                if item['parTarefGrp']:
+                    parTarefGrp= item['parTarefGrp']
+
+
+                await TaminDrugs(
+                            srvCode= str(item['srvCode']),
+                            srvName= name,
+                            srvType= srvType,
+                            srvTypeDes= srvTypeDes,
+                            status= status,
+                            srvBimSw= srvBimSw,
+                            gSrvCode= gSrvCode,
+                            wsSrvCode= wsSrvCode,
+                            parTarefGrp= parTarefGrp
+                            ).save()
+
+        respClause = await TaminDrugs().search(('srvName' ,clause ,'set'))
+        if respClause: 
+            lsNew = []
+            for name ,_id in respClause:
+                lsNew.append((' '.join(name.split(':')[2:]) ,_id))
+            
+            respClause = lsNew
+
+        return respClause
+
+    async def getDrugAmnt(self):
+        
+        nameClass = 'TaminDrugAmnt'.lower() + ':all'
+
+        resp = await redis._hgetall(nameClass)
+        if not resp:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(self.TAMIN_DRUG_AMNT) as response:
+                    data = await response.json()
+
+
+            dic ={}
+            for item in data['data']['list']:
+                dic[str(item['drugAmntId'])] = json.dumps(item)
+
+            await redis._hset(nameClass ,dic)
+
+        newLs = []
+        resp = await redis._hgetall(nameClass)
+        for _id ,jsonData in resp.items():
+            try:
+                data = json.loads( jsonData )
+
+                newLs.append({'id':_id ,'name':data['drugAmntConcept'].split('-')[0]})
+            except:
+                pass
+
+        return newLs
+
+    async def getDrugInst(self):
+
+        nameClass = 'TaminDrugInst'.lower() + ':all'
+
+        resp = await redis._hgetall(nameClass)
+        if not resp:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(self.TAMIN_DRUG_INST) as response:
+                    data = await response.json()
+
+
+            dic ={}
+            for item in data['data']['list']:
+                dic[str(item['drugInstId'])] = json.dumps({'drugInstConcept':item['drugInstConcept'],
+                                                           'drugInstId':str(item['drugInstId']),
+                                                            'drugInstCode':item['drugInstCode']}    )
+
+            await redis._hset(nameClass ,dic)
+
+        newLs = []
+        resp = await redis._hgetall(nameClass)
+        for _id ,jsonData in resp.items():
+            try:
+                data = json.loads( jsonData )
+
+                newLs.append({'id':_id ,'name':data['drugInstConcept']})
+            except:
+                pass
+
+        return newLs
+
+
+class SalamatUrls:
+    pass
 
 class URLS:
 
@@ -11,10 +205,6 @@ class URLS:
     
     SALAMAT      = SALAMAT_TEST
  
-    TAMIN_MAIN   = 'http://soa.tamin.ir/interface/epresc/'
-    TAMIN_TEST   = 'http://soa.tamin.ir/interface/epresc/'
-
-    TAMIN = TAMIN_TEST
 
     DoOpenUserSession             = SALAMAT + 'auth/session/cparty/open'
     FetchAgentDailyToken          = SALAMAT + 'auth/token/fetch'
@@ -48,55 +238,63 @@ class URLS:
     FetchSubPartnerInfoByPartnerId = SALAMAT + 'partner/fetch/partnerid'
 
 
+class Tamin:
 
-class Pateint(URLS):
+    pass
 
-    async def getInfo(self ,national_number):
-
-
-        tasks = [
-                # self.request('get' , self.Tamin) ,
-                self.request('get' , self.DoOpenCitizenSession ) ,
-                ]
-
-        result = await asyncio.gather(*tasks)
+class Salamat:
+    
+    pass
 
 
-        # ================ check tamin and salamat and save it to redis ================
-        pass
-        # ===========================================================================
+# class Pateint(URLS):
+
+#     async def getInfo(self ,national_number):
+
+
+#         tasks = [
+#                 # self.request('get' , self.Tamin) ,
+#                 self.request('get' , self.DoOpenCitizenSession ) ,
+#                 ]
+
+#         result = await asyncio.gather(*tasks)
+
+
+#         # ================ check tamin and salamat and save it to redis ================
+#         pass
+#         # ===========================================================================
 
 
 
-        """
-        import uuid
-        if not in redis :
-            while redis.set(patient:uuid):
-                pass
-        """
+#         """
+#         import uuid
+#         if not in redis :
+#             while redis.set(patient:uuid):
+#                 pass
+#         """
 
-        return result
+#         return result
 
-    async def sendPresc(self ,data):
+#     async def sendPresc(self ,data):
         
-        # check insurance type and send presc
-        pass
+#         # check insurance type and send presc
+#         pass
 
 
-class Doctor():
+# class Doctor():
 
-    async def getSession(self ,username ,password):
+#     async def getSession(self ,username ,password):
 
-        resp = salamatHandler.getSession(username ,password)
-        obj = DoctorSession(
-                            sessionId= resp['info']['sessionId'] ,
-                            accessNodes=resp['info']['accessNodes'],
-                            additionalProperties=resp['info']['additionalProperties'],
-                            userId=resp['info']['userId'],
-                            contractingPartyLicense=resp['info']['contractingPartyLicense'],
-                            twoStep=resp['info']['twoStep'],
-                            )
-        obj.save()
+#         resp = salamatHandler.getSession(username ,password)
+#         obj = DoctorSession(
+#                             sessionId= resp['info']['sessionId'] ,
+#                             accessNodes=resp['info']['accessNodes'],
+#                             additionalProperties=resp['info']['additionalProperties'],
+#                             userId=resp['info']['userId'],
+#                             contractingPartyLicense=resp['info']['contractingPartyLicense'],
+#                             twoStep=resp['info']['twoStep'],
+#                             )
+#         obj.save()
 
 
     
