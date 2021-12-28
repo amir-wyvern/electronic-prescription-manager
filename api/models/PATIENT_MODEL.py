@@ -1,35 +1,30 @@
-from async_redis import Model
-from async_redis import (
-        Field ,
-        FieldHash,
-        Instr ,
-        PkFieldHash ,
-        StringFieldHash ,
-        IntegerFieldHash ,
-        ListFieldHash ,
-        DictFieldHash ,
+from async_redis.redis_orm import Model
+from async_redis.fields import (
+        HashField,
+        PkField,
         StringField
         )
 
-class NobanPatient(Model):
 
-        patientId      = PkFieldHash()
-        nationalNumber = StringFieldHash(indexable=True)
-        firstName      = StringFieldHash(indexable=True)
-        lastName       = StringFieldHash(indexable=True)
-        fullName       = StringFieldHash(indexable=True)
-        numberNphone   = StringFieldHash(indexable=True)
-        birthDate      = StringFieldHash()
-        insurance      = StringFieldHash()
-        subInsurance   = StringFieldHash()
-        exDate         = StringFieldHash()
+class Patient(Model):
 
-        infoHash       = StringFieldHash()
+        patientId      = PkField()
+        nationalNumber = HashField(indexable= True)
+        firstName      = HashField(indexable= True)
+        lastName       = HashField(indexable= True)
+        fullName       = HashField(indexable= True) 
+        numberPhone    = HashField(indexable= True)
+        birthDate      = HashField()
+        insurance      = HashField()
+        subInsurance   = HashField()
+        exDate         = HashField()
+
+        infoHash       = HashField()
 
 
 class PatientSession(Model):
         
-        cpartySessionId = PkFieldHash()
-        nationalNumber  = StringFieldHash(indexable= True)
-        numberPhone     = StringFieldHash(indexable= True)
+        cpartySessionId = PkField()
+        nationalNumber  = HashField(indexable= True)
+        numberPhone     = HashField(indexable= True)
 

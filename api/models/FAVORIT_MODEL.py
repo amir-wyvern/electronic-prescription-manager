@@ -1,19 +1,14 @@
-from async_redis import Model
-from async_redis import (
-        Field ,
-        FieldHash,
-        Instr ,
-        PkFieldHash ,
-        StringFieldHash ,
-        IntegerFieldHash ,
-        ListFieldHash ,
-        DictFieldHash ,
-        StringField
+from async_redis.redis_orm import Model
+from async_redis.fields import (
+        StringField,
+        HashField,
+        SortedSet,
+        PkField
         )
 
 
-class Favorit(Model):
+class FavoritDrug(Model):
 
-        doctorId : str = PkFieldHash() 
-        detail   : str = StringFieldHash() # patient mobile number
+        doctorId    : str = PkField() 
+        jsonData    : str = SortedSet()
 

@@ -1,60 +1,55 @@
-from async_redis import Model
-from async_redis import (
-        Field ,
-        FieldHash,
-        Instr ,
-        PkFieldHash ,
-        StringFieldHash ,
-        IntegerFieldHash ,
-        ListFieldHash ,
-        DictFieldHash ,
+from async_redis.redis_orm import Model
+from async_redis.fields import (
+        HashField,
+        PkField,
         StringField
         )
 
 
 class TaminPresc(Model):
 
-        prescId          : str = PkFieldHash() 
-        patient	         : str = StringFieldHash(indexable= True) # patient national code
-        mobile           : str = StringFieldHash(indexable= True) # patient mobile number
-        prescTypeId      : str = StringFieldHash()                # prescription type find proper one from Prescription Type
-        prescDate        : str = StringFieldHash()                # prescription date
-        docId            : str = StringFieldHash()                # doctor valid id
-        docMobileNo      : str = StringFieldHash(indexable= True) # doctor mobile number
-        docNationalCode  : str = StringFieldHash(indexable= True) # doctor national code
-        comments         : str = StringFieldHash()                # comment
-        creatorType      : str = StringFieldHash()
-        siamId           : str = StringFieldHash(indexable= True)
+        prescId          : str = PkField() 
+        patient	         : str = HashField(indexable= True) # patient national code
+        mobile           : str = HashField(indexable= True) # patient mobile number
+        prescTypeId      : str = HashField()                # prescription type find proper one from Prescription Type
+        prescDate        : str = HashField()                # prescription date
+        docId            : str = HashField()                # doctor valid id
+        docMobileNo      : str = HashField(indexable= True) # doctor mobile number
+        docNationalCode  : str = HashField(indexable= True) # doctor national code
+        comments         : str = HashField()                # comment
+        creatorType      : str = HashField()
+        siamId           : str = HashField(indexable= True)
          
-        noteDetailEprscs : str = StringFieldHash() 
+        noteDetailEprscs : str = HashField() 
 
-        srvType	         : str = StringFieldHash()                # defines that current request is for dentist service
-        srvCode	         : str = StringFieldHash()                # defines that current request is for dentist service
-        srvQty	         : str = StringFieldHash() 
+        srvType	         : str = HashField()                # defines that current request is for dentist service
+        srvCode	         : str = HashField()                # defines that current request is for dentist service
+        srvQty	         : str = HashField() 
 
         # drug
-        drugAmntId	 : str = StringFieldHash()                # defines that current request is for dentist service
-        repeat	         : str = StringFieldHash()                # defines that current request is for dentist service
-        drugInstId	 : str = StringFieldHash()    
+        drugAmntId	 : str = HashField()                # defines that current request is for dentist service
+        repeat	         : str = HashField()                # defines that current request is for dentist service
+        drugInstId	 : str = HashField()    
 
         # para
-        parGrpCode	 : str = StringFieldHash()                # defines that current request is for dentist service
+        parGrpCode	 : str = HashField()                # defines that current request is for dentist service
 
 
 class SalamatPresc(Model):      
 
-        cpartySessionId	       : str = StringFieldHash()                # patient national code
-        citizenSessionId       : str = StringFieldHash()                # patient mobile number
-        samadCode              : str = StringFieldHash(indexable= True) # prescription type find proper one from Prescription Type
+        prescId          : str = PkField() 
+        cpartySessionId	       : str = HashField()                # patient national code
+        citizenSessionId       : str = HashField()                # patient mobile number
+        samadCode              : str = HashField(indexable= True) # prescription type find proper one from Prescription Type
         
-        subscriptions          : str = StringFieldHash()                # prescription date
+        subscriptions          : str = HashField()                # prescription date
 
-        id                     : str = StringFieldHash()                # sub version ID of the written Presc
-        serviceId              : str = StringFieldHash(indexable= True) # 
-        consumption            : str = StringFieldHash()                # drug instruction
-        shape	               : str = StringFieldHash()                # 
-        consumptionInstruction : str = StringFieldHash()                # take syrup medicine instruction
-        numberOfRequest        : str = StringFieldHash()                # 
-        numberOfPeriod         : str = StringFieldHash()                # 
-        description            : str = StringFieldHash()                # 
-        checkCode	       : str = StringFieldHash()                # Check the rules and services of the drug (‫‪checkSubscription‬‬)
+        id                     : str = HashField()                # sub version ID of the written Presc
+        serviceId              : str = HashField(indexable= True) # 
+        consumption            : str = HashField()                # drug instruction
+        shape	               : str = HashField()                # 
+        consumptionInstruction : str = HashField()                # take syrup medicine instruction
+        numberOfRequest        : str = HashField()                # 
+        numberOfPeriod         : str = HashField()                # 
+        description            : str = HashField()                # 
+        checkCode	       : str = HashField()                # Check the rules and services of the drug (‫‪checkSubscription‬‬)
