@@ -11,10 +11,10 @@ sys.path.insert(0, dire )
 from routers.v1 import patient  as patient_v1
 from routers.v1 import login    as login_v1
 from routers.v1 import services as services_v1
-from routers.v1 import doctor   as doctor_v1
+# from routers.v1 import doctor   as doctor_v1
 from routers.v1 import visit    as visit_v1
 
-from async_redis.redis_orm import redis
+from async_redis.redis_obj import redis
 from fastConfig import Swagger
 from fastapi.middleware.cors import CORSMiddleware
 
