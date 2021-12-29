@@ -46,17 +46,14 @@ class ModelMetaclass(type):
                         if _name not in ls:
 
                             newAttrs[_name] = comLambda(_name)
-                            # newAttrs[_name] = lambda _obj ,_tuple : getattr(Funcs() ,_name)(_obj ,_tuple) if _tuple else getattr(Funcs() ,_name)(_obj)
                             ls.append(_name)   
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                        # print(f'[{k}] ,ls : {ls}'  )
 
                     objMappings[k] = v 
             
             attrs.update(newAttrs) 
             attrs['__objMappings__'] = objMappings.copy()
 
-            # print(f'{name}=> ' , attrs)
             return type.__new__(cls, name, bases, attrs)
             
         else:
