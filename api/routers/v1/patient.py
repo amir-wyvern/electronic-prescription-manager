@@ -88,7 +88,7 @@ class ErrorModel(BaseModel):
 async def save_patient_numberPhone(model: SaveNumberPhone= Body(...)):
     
     # ===== save in redis and check the phone number so that it is not duplicated in the database =======
-    await PatientModel(patientId= model.patientId).edit(numberPhone= model.numberPhone)
+    # await PatientModel(patientId= model.patientId).edit(numberPhone= model.numberPhone)
     # ===========================
 
     return JSONResponse(
@@ -110,7 +110,7 @@ async def fetch_patient_info(doctorID: str = Query(
             content= jsonable_encoder({"detail": 'This national number is not valid'}),
             )
 
-    resultPatient = await PatientModel().find(nationalNumber= nationalNumber)
+    resultPatient = await PatientModel().getItem(({'nationalNumber': nationalNumber},))
     # ====== Check the existence of a national number in the sabteahval system ======
     pass
     # ===============================================================================
