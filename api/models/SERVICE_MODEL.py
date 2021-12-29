@@ -32,7 +32,8 @@ class TaminDrugs(Model):
         srvBimSw    = HashField() 
         gSrvCode    = HashField()
         wsSrvCode   = HashField(indexable=True)
-        parTarefGrp = HashField()
+        parGrpCode = HashField()
+        parGrpDesc = HashField()
 
 
 class TaminDrugAmnt(Model):
@@ -45,3 +46,59 @@ class TaminDrugAmnt(Model):
         # drugAmntSumry = HashField()
         # drugAmntLatin = HashField(indexable= True)
         # drugAmntConcept = HashField(indexable= True)
+
+
+class TaminExper(Model):
+
+        srvCode = PkField()
+        srvName = HashField(indexable= True)
+        srvType =HashField()
+        srvTypeDes=HashField()
+        status= HashField()
+        srvBimSw = HashField()
+        gSrvCode = HashField()
+        wsSrvCode = HashField()
+        parGrpCode = HashField()
+        parGrpDesc = HashField()
+
+
+class TaminPhysio(Model):
+
+        srvCode = PkField()
+        srvName = HashField(indexable= True)
+        srvType =HashField()
+        srvTypeDes=HashField()
+        status= HashField()
+        srvBimSw = HashField()
+        gSrvCode = HashField()
+        wsSrvCode = HashField()
+        parGrpCode = HashField()
+        parGrpDesc = HashField()
+
+
+class TaminImaging(Model):
+
+        srvCode = PkField()
+        srvName = HashField(indexable= True)
+        srvType =HashField()
+        srvTypeDes=HashField()
+        status= HashField()
+        srvBimSw = HashField()
+        gSrvCode = HashField()
+        wsSrvCode = HashField()
+        parGrpCode = HashField()
+        parGrpDesc = HashField()
+
+
+class TaminService(Model):
+
+        srvCode = PkField()
+        srvName = HashField(indexable= True)
+        srvType =HashField()
+        srvTypeDes=HashField()
+        status= HashField()
+        srvBimSw = HashField()
+        gSrvCode = HashField()
+        wsSrvCode = HashField()
+        parGrpCode = HashField()
+        parGrpDesc = HashField()
