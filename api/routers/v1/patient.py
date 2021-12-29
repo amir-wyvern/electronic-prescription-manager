@@ -90,7 +90,7 @@ async def save_patient_numberPhone(model: SaveNumberPhone= Body(...)):
     # ===== save in redis and check the phone number so that it is not duplicated in the database =======
     # await PatientModel(patientId= model.patientId).edit(numberPhone= model.numberPhone)
     # ===========================
-
+    await PatientModel(patientId= model.patientId).edit(({'numberPhone' :model.numberPhone},))
     return JSONResponse(
             status_code= status.HTTP_200_OK,
             content= jsonable_encoder({"detail": 'Numberphone saved'}),
