@@ -7,9 +7,6 @@ class Funcs:
     @staticmethod
     async def save(self ):
         
-        if not self._saveState:
-            raise ExceptionHandler(f'{self.__class__.__name__}() ,You have not any argument, so you can not use the "save" method')
-
         main_key = self.__class__.__name__.lower()
 
         if self.__pk__ : 
@@ -42,7 +39,6 @@ class Funcs:
         main_key = self.__class__.__name__.lower()
 
         if self.__pk__ and self.__pk__['key'] in kwrgs.keys():
- 
             data = await redis._hgetall('{0}:{1}:{2}'.format(main_key ,self.__pk__['key'] ,kwrgs[self.__pk__['key']] ))
             if data:
                 ls_fin.append(data)
@@ -69,10 +65,9 @@ class Funcs:
             for req in temp :
                 data = await redis._hgetall('{0}:{1}:{2}'.format(main_key ,self.__pk__['key'] ,req) )
                 if data:
-                    print(data)
                     data[self.__pk__['key']] = req
                     ls_fin.append(data)
-        print('---' ,ls_fin)
+
         return ls_fin
 
     @staticmethod
@@ -112,9 +107,6 @@ class Funcs:
     @staticmethod
     async def addFavorit(self):
         
-        if not self._saveState:
-            raise ExceptionHandler(f'{self.__class__.__name__}() ,You have not any argument, so you can not use the "save" method')
-
         main_key = self.__class__.__name__.lower()
 
         if self.__pk__ : 
@@ -140,21 +132,47 @@ class Funcs:
         
         num = _tuple[0]
 
-        if not self._saveState:
-            raise ExceptionHandler(f'{self.__class__.__name__}() ,You have not any argument, so you can not use the "save" method')
-
         main_key = self.__class__.__name__.lower()
 
         if self.__pk__ : 
 
             main_key += ':{0}:{1}'.format( self.__pk__['key'] ,getattr(self ,self.__pk__['key']) ) 
-
             result = await redis._zrevrangebyscore(main_key ,min='+inf' ,max= 0 ,start= 0 ,num= num )
             ls= []
             for item in result:
                 try:
                     ls.append(json.loads(item))
+                    
                 except:
                     pass
 
             return ls
+
+    @staticmethod
+    async def edit(self ,_tuple):
+
+        kwrgs = _tuple[0]
+
+        table_name = self.__class__.__name__.lower()
+
+        if self.__pk__ :
+            
+            dic = {}
+            for key ,value in kwrgs.items():
+                if key in self.__objMappings__:
+                    if self.__objMappings__[key].__indexable__ :
+                        pkValue = self.__valueMappings__[self.__pk__['key']]
+                        oldData = await self.getItem(({self.__pk__['key']:pkValue} ,))
+                        if oldData :
+                            oldValue = oldData[0][key]
+                            await redis._srem(f'{table_name}:{key}:{oldValue}' ,pkValue)
+                            await redis._sadd(f'{table_name}:{key}:{value}'    ,pkValue)
+                    
+                    dic[key] = value
+
+            if dic:
+                pk = self.__pk__['key']
+                pkValue = self.__valueMappings__[pk]
+                key = f'{table_name}:{pk}:{pkValue}'
+                await redis._hset(key ,dic)
+                return True
