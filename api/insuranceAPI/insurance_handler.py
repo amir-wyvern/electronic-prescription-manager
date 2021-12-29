@@ -498,8 +498,10 @@ class TaminHandler(TaminUrls):
 
         return respClause
 
+
 class SalamatUrls:
     pass
+
 
 class URLS:
 
