@@ -12,3 +12,25 @@ class FavoritDrug(Model):
         doctorId    : str = PkField() 
         jsonData    : str = SortedSet()
 
+
+class FavoritExper(Model):
+
+        doctorId    : str = PkField() 
+        jsonData    : str = SortedSet()
+
+
+class FavoritPhysio(Model):
+
+        doctorId    : str = PkField() 
+        jsonData    : str = SortedSet()
+
+class FavoritImaging(Model):
+
+        doctorId    : str = PkField() 
+        jsonData    : str = SortedSet()
+
+class FavoritService(Model):
+
+        doctorId    : str = PkField() 
+        jsonData    : str = SortedSet()
+
