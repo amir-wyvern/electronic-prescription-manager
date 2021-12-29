@@ -36,7 +36,7 @@ class Redis ():
         return await self.__redis.set(key ,value)
 
     async def _hset(self ,key ,mapping ):
-
+       
         return await self.__redis.hset(key  ,mapping= mapping )
 
     async def _sadd(self ,key ,field):

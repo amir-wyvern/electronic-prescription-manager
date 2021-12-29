@@ -42,8 +42,10 @@ class Funcs:
         main_key = self.__class__.__name__.lower()
 
         if self.__pk__ and self.__pk__['key'] in kwrgs.keys():
+ 
             data = await redis._hgetall('{0}:{1}:{2}'.format(main_key ,self.__pk__['key'] ,kwrgs[self.__pk__['key']] ))
-            ls_fin.append(data)
+            if data:
+                ls_fin.append(data)
 
         else:
 
@@ -66,9 +68,11 @@ class Funcs:
 
             for req in temp :
                 data = await redis._hgetall('{0}:{1}:{2}'.format(main_key ,self.__pk__['key'] ,req) )
-                data[self.__pk__['key']] = req
-                ls_fin.append(data)
-
+                if data:
+                    print(data)
+                    data[self.__pk__['key']] = req
+                    ls_fin.append(data)
+        print('---' ,ls_fin)
         return ls_fin
 
     @staticmethod
