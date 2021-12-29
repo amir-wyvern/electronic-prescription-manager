@@ -1,11 +1,13 @@
-from os import name
 from typing import Dict, List, Optional
-from fastapi import APIRouter ,Body ,Query
+from fastapi import APIRouter  ,Query
 from pydantic import BaseModel ,Field
-from api.models.SERVICE_MODEL import TaminDrugs 
-from api.models.FAVORIT_MODEL import FavoritDrug
+from api.models.FAVORIT_MODEL import (FavoritDrug ,
+                                    FavoritExper, 
+                                    FavoritImaging, 
+                                    FavoritPhysio,
+                                    FavoritService
+                                    )
 
-from async_redis.redis_obj import redis
 import logging
 
 from insuranceAPI.insurance_handler import TaminHandler
@@ -328,6 +330,25 @@ async def experimentation_query(patientId : str = Query(None, min_length=3, max_
                     doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
                     clause : str = Query(None, min_length=1, max_length=60 ,example= 'اندازه')):
 
+    resSearch = await TaminHandler().getExper(clause)
+    resFav = await FavoritExper(doctorId= doctorId).getFavorit((5,))
+
+    lsDrugs = []
+    for name ,_id in resSearch :
+        lsDrugs.append({
+            'id' : _id,
+            'name' : name,
+            'favorit' : resFav
+        })
+
+
+    resp = {
+        'data' : lsDrugs
+    }
+    return resp
+
+
+
     ExperimentationQuery_ResponseModel = {
         'data': [
             {
@@ -344,27 +365,28 @@ async def experimentation_query(patientId : str = Query(None, min_length=3, max_
 
     return ExperimentationQuery_ResponseModel
 
-
 @router.get("/physio" ,response_model= PhysiotherapyQuery_ResponseModel) 
 async def physiotherapy_query(patientId : str = Query(None, min_length=3, max_length=60 ,example= 'bba18866-5bd8-4264-9e0d-4d91190688bb') ,
                     doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
                     clause : str = Query(None, min_length=1, max_length=60 ,example= 'کف پا')):
     
-    PhysiotherapyQuery_ResponseModel = {
-        'data': [
-            {
-                'id' : '4352234' ,
-                'name' : 'اندازه گيري کمّي نوراپي نفرين در خون/سرم/پلاسما',
-                'favorit' : [
-                    {
-                        'numberOfRequest' : 1
-                    }
-                ]  
-            }
-        ]
-    } 
+    resSearch = await TaminHandler().getPhysio(clause)
+    resFav = await FavoritPhysio(doctorId= doctorId).getFavorit((5,))
 
-    return PhysiotherapyQuery_ResponseModel
+    lsDrugs = []
+    for name ,_id in resSearch :
+        lsDrugs.append({
+            'id' : _id,
+            'name' : name,
+            'favorit' : resFav
+        })
+
+
+    resp = {
+        'data' : lsDrugs
+    }
+
+    return resp
 
 
 @router.get("/imaging" ,response_model= ImagingQuery_ResponseModel) 
@@ -372,21 +394,24 @@ async def imaging_query(atientId : str = Query(None, min_length=3, max_length=60
                     doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
                     clause : str = Query(None, min_length=1, max_length=60 ,example= 'ساق پا')):
     
-    ImagingQuery_ResponseModel = {
-        'data': [
-            {
-                'id' : '798454' ,
-                'name' : 'سي تي اسکن ساق پا چپ بدون کنتراست',
-                'favorit' : [
-                    {
-                        'numberOfRequest' : 1
-                    }
-                ]  
-            }
-        ]
-    } 
 
-    return ImagingQuery_ResponseModel
+    resSearch = await TaminHandler().getImaging(clause)
+    resFav = await FavoritImaging(doctorId= doctorId).getFavorit((5,))
+
+    lsDrugs = []
+    for name ,_id in resSearch :
+        lsDrugs.append({
+            'id' : _id,
+            'name' : name,
+            'favorit' : resFav
+        })
+
+
+    resp = {
+        'data' : lsDrugs
+    }
+
+    return resp
 
 
 @router.get("/service" ,response_model= DocServiceQuery_ResponseModel) 
@@ -394,20 +419,23 @@ async def service_query(atientId : str =  Query(None, min_length=3, max_length=6
                     doctorId : str = Query(None, min_length=3, max_length=60 ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474'),
                     clause : str = Query(None, min_length=1, max_length=60 ,example= 'پوستچروگرا')):
     
-    DocServiceQuery_ResponseModel = {
-        'data': [
-            {
-                'id' : '521692' ,
-                'name' : 'پوستچروگرافي ديناميک کامپيوتري (صندلي چرخان)',
-                'favorit' : [
-                    {
-                        'numberOfRequest' : 1
-                    }
-                ]  
-            }
-        ]
-    } 
+    resSearch = await TaminHandler().getService(clause)
+    resFav = await FavoritService(doctorId= doctorId).getFavorit((5,))
 
-    return DocServiceQuery_ResponseModel
+    lsDrugs = []
+    for name ,_id in resSearch :
+        lsDrugs.append({
+            'id' : _id,
+            'name' : name,
+            'favorit' : resFav
+        })
+
+
+    resp = {
+        'data' : lsDrugs
+    }
+
+    return resp
+
 
 
