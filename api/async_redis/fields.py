@@ -12,7 +12,7 @@ class StringField(object):
     def __init__(self ,indexable= False):
 
         self.__indexable__ = indexable
-        self.__lsfuncs__   = ['save' ,'getItem' ,'search']
+        self.__lsfuncs__   = ['save' ,'getItem' ,'search' ,'edit']
         
     def __str__(self):
         return '<%s:%s>' % (self.__class__.__name__)
@@ -23,7 +23,7 @@ class HashField(object):
     def __init__(self ,indexable= False):
 
         self.__indexable__ = indexable
-        self.__lsfuncs__ = ['save' ,'getItem' ,'search'] 
+        self.__lsfuncs__ = ['save' ,'getItem' ,'search' ,'edit'] 
 
     def __str__(self):
         return '<%s>' % (self.__class__.__name__)
@@ -33,7 +33,7 @@ class PkField(object):
     def __init__(self ,indexable= False):
 
         self.__indexable__ = indexable
-        self.__lsfuncs__ = ['save' ,'getItem' ,'search']
+        self.__lsfuncs__ = ['save' ,'getItem' ,'search' ,'edit']
 
     def __str__(self):
         return '<%s>' % (self.__class__.__name__)
@@ -43,7 +43,7 @@ class SortedSet(object):
     def __init__(self ,indexable= False):
 
         self.__indexable__ = indexable
-        self.__lsfuncs__ = ['addFavorit' ,'getFavorit']
+        self.__lsfuncs__ = ['addFavorit' ,'getFavorit' ]
 
     def __str__(self):
         return '<%s>' % (self.__class__.__name__)
