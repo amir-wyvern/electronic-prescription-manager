@@ -5,16 +5,15 @@ services:
 
 build:
   stage: build
-  only:
-    - master
-  script:
+  script:  
+    - docker login registry.cscloud.ir
     - docker-compose -f docker-compose-prod.yml build --force-rm
-
+    - docker push $REGISTRY_URL/$GROUP_NAME/$STACK:latest
+    
 deploy:
   stage: deploy
-  only:
-    - master
   script:
-    - docker stack deploy -c docker-compose-prod.yml $STACK
+    - docker stack deploy -c docker-compose-prod.yml $STACK --with-registry-auth
     - docker service update --force "$STACK"_"$SERVICE1"
+
 
