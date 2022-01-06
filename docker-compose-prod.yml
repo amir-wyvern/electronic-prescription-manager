@@ -4,7 +4,7 @@ services:
 
   app:
     build: .
-    image: $STACK:latest
+    image: $REGISTRY_URL/$GROUP_NAME/$STACK:latest
     environment:
       CLIENT_SLEEP: 0.25  # Time in ms between each poll by web server against Redis
       CLIENT_MAX_TRIES: 100  # Num tries by web server to retrieve results from Redis before giving up
@@ -25,7 +25,7 @@ services:
       - traefik
 
   redis:
-    image: redis:6.2.5
+    image: $REGISTRY_URL/redis:6.2.5
     networks:
       - traefik
 
