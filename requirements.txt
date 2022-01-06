@@ -10,6 +10,7 @@ cffi==1.15.0
 charset-normalizer==2.0.7
 click==8.0.3
 cryptography==36.0.0
+Deprecated==1.2.13
 ecdsa==0.17.0
 fastapi==0.70.0
 frozenlist==1.2.0
@@ -23,6 +24,7 @@ pydantic==1.8.2
 python-dotenv==0.19.1
 python-jose==3.3.0
 PyYAML==6.0
+redis==4.0.2
 requests==2.26.0
 rsa==4.7.2
 six==1.16.0
@@ -34,4 +36,5 @@ uvicorn==0.15.0
 uvloop==0.16.0
 watchgod==0.7
 websockets==10.0
+wrapt==1.13.3
 yarl==1.7.2
