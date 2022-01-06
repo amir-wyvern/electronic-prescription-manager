@@ -24,7 +24,9 @@ from dotenv import dotenv_values
 config = dotenv_values('.env')
 
 
-REDIS_HOST = config['REDISURI']
+# REDIS_HOST = config['REDISURI']
+REDIS_HOST = 'localhost'
+
 REDIS_PORT = '6379'
 
 
