@@ -18,7 +18,13 @@ from async_redis.redis_obj import redis
 from fastConfig import Swagger
 from fastapi.middleware.cors import CORSMiddleware
 
-REDIS_HOST = 'localhost'
+import os
+from dotenv import dotenv_values
+
+config = dotenv_values('.env')
+
+
+REDIS_HOST = config['REDISURI']
 REDIS_PORT = '6379'
 
 
