@@ -19,12 +19,11 @@ from fastConfig import Swagger
 from fastapi.middleware.cors import CORSMiddleware
 
 import os
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 
-config = dotenv_values('.env')
+load_dotenv(".env", verbose=True)
+REDIS_HOST = os.getenv('REDISURI')
 
-
-REDIS_HOST = config['REDISURI']
 # REDIS_HOST = 'localhost'
 
 REDIS_PORT = '6379'
