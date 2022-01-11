@@ -1,7 +1,8 @@
-from fastapi import APIRouter ,Body
+from fastapi import APIRouter ,Body ,status ,Query
 from pydantic import BaseModel ,Field 
 from typing import List, Optional
-
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 
 router = APIRouter(
@@ -168,7 +169,7 @@ class CheckService_ResponseModel(BaseModel):
         serviceId : str
         message   : str
 
-    resultCode : str
+    resultCode : int
     warnings : List[WarningModel]
     errors : List[ErrorModel]
 
@@ -185,6 +186,13 @@ class TotalPresc_ResponseModel(CheckService_ResponseModel):
 
 @router.post("/drug" ,response_model= CheckService_ResponseModel) 
 async def drug_prescription(item: DrugPrescModel= Body(...)):
+
+    {
+        'resultCode': 200 ,
+        'warnings':[] ,
+        'errors' : []
+    }
+
     return CheckService_ResponseModel
 
 
@@ -215,7 +223,13 @@ async def service_prescription(item: ServicesModel= Body(...)):
 
 @router.post("/submit" ,response_model= TotalPresc_ResponseModel) 
 async def save_prescription(item: TotalPrescModel= Body(...)):
-    return TotalPresc_ResponseModel
+
+    return JSONResponse(
+            status_code= status.HTTP_404_NOT_FOUND,
+            content= jsonable_encoder({"detail": 'The Doctor Id not found'}),
+            ) 
+
+    # return TotalPresc_ResponseModel
 
 
 class PrescDeleteModel(BaseModel):
@@ -247,15 +261,34 @@ class PrescDetail_ResponseModel(BaseModel):
 
 @router.delete("/delete" ,response_model= PrescDelete_ResponseModel) 
 async def delete_prescription(item: PrescDeleteModel= Body(...)):
-    return item
+    # return item
+    return JSONResponse(
+        status_code= status.HTTP_404_NOT_FOUND,
+        content= jsonable_encoder({"detail": 'The Doctor Id not found'}),
+        ) 
+
 
 @router.put("/update" ,response_model= TotalPresc_ResponseModel) 
 async def update_prescription(item: PrescUpdateModel= Body(...)):
-    return item
+    # return item
+    return JSONResponse(
+        status_code= status.HTTP_404_NOT_FOUND,
+        content= jsonable_encoder({"detail": 'The Doctor Id not found'}),
+        ) 
+
 
 @router.get("/detail") 
-async def detail_prescription(item: PrescDetailModel= Body(...)):
-    return item
+async def detail_prescription(
+                            doctorID: str = Query(
+                                        None ,max_length=50 , min_length=2 ,regex='[0-9]+' ,example= '640b4ea5-69b4-46a1-a97f-0405aaee6474') ,
+                            prescId : str = Query(
+                                        None ,max_length=50 , min_length=1 ,example='640b4ea5-69b4' ) ):
+    # return item
+    return JSONResponse(
+        status_code= status.HTTP_404_NOT_FOUND,
+        content= jsonable_encoder({"detail": 'The Doctor Id not found'}),
+        ) 
+
 
 
 

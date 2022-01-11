@@ -14,7 +14,7 @@ router = APIRouter(
     )
 
 
-def checkNationalNumber(nationalNumber : str) -> bool:
+def checkNationalNumber(nationalNumber : str) -> bool: 
 
     """
     Check the accuracy of the national number
